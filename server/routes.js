@@ -3,7 +3,10 @@ import Router from 'koa-router';
 
 const getNextId = () => Number(_.uniqueId());
 
-export default (router, io) => {
+export default (router, io, container) => {
+  const { logger } = container;
+  const log = logger('routes:');
+
   const generalChannelId = getNextId();
   const randomChannelId = getNextId();
   const defaultState = {
@@ -20,11 +23,13 @@ export default (router, io) => {
   const apiRouter = new Router();
   apiRouter
     .get('/channels', (ctx) => {
+      log('channels list rquested');
       ctx.body = state.channels;
       ctx.status = 301;
     })
     .post('/channels', (ctx) => {
       const { data: { attributes: { name } } } = ctx.request.body;
+      log(`channel "${name}" addition requested`);
       const channel = {
         name,
         removable: true,
@@ -42,9 +47,11 @@ export default (router, io) => {
       ctx.body = data;
 
       io.emit('newChannel', data);
+      log(`new channel has been added: ${JSON.stringify(data)}`);
     })
     .delete('/channels/:id', (ctx) => {
       const channelId = Number(ctx.params.id);
+      log(`channel (id: ${channelId}) deletion requested`);
       state.channels = state.channels.filter(c => c.id !== channelId);
       state.messages = state.messages.filter(m => m.channelId !== channelId);
       ctx.status = 204;
@@ -55,12 +62,15 @@ export default (router, io) => {
         },
       };
       io.emit('removeChannel', data);
+      log(`channel (id: ${channelId}) has been deleted`);
     })
     .patch('/channels/:id', (ctx) => {
       const channelId = Number(ctx.params.id);
       const channel = state.channels.find(c => c.id === channelId);
 
       const { attributes } = ctx.request.body.data;
+      log(`requested channel (id: ${channelId}) change with attributes: ${JSON.stringify(attributes)}`);
+      const oldName = channel.name;
       channel.name = attributes.name;
       ctx.status = 204;
       const data = {
@@ -71,17 +81,23 @@ export default (router, io) => {
         },
       };
       io.emit('renameChannel', data);
+      log(`сhannel (id: ${channelId}) renamed from ${oldName} to ${attributes.name}`);
     })
     .get('/channels/:channelId/messages', (ctx) => {
-      const messages = state.messages.filter(m => m.channelId === Number(ctx.params.channelId));
+      const channelId = Number(ctx.params.channelId);
+      const messages = state.messages.filter(m => m.channelId === channelId);
+      log(`channel (id: ${channelId}) messages requested`);
       const resources = messages.map(m => ({
         type: 'messages',
         id: m.id,
         attributes: m,
       }));
       ctx.body = resources;
+      log(`channel (id: ${channelId}), prepared a response with number of messages: ${resources.length}`);
     })
     .post('/channels/:channelId/messages', (ctx) => {
+      const channelId = Number(ctx.params.channelId);
+      log(`channel (id: ${channelId}), new message`);
       const { data: { attributes } } = ctx.request.body;
       const message = {
         ...attributes,
@@ -99,6 +115,7 @@ export default (router, io) => {
       };
       ctx.body = data;
       io.emit('newMessage', data);
+      log(`new message in channel (id: ${channelId}): ${JSON.stringify(data)}`);
     });
 
   return router

@@ -6,6 +6,9 @@ start:
 install-deps:
 	npm install
 
+install-flow-typed:
+	npx flow-typed install
+
 build:
 	rm -rf dist
 	npm run build

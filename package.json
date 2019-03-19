@@ -1,5 +1,5 @@
 {
-  "name": "frontend_l4_chat_project",
+  "name": "frontend_chat_project",
   "version": "0.0.1",
   "description": "",
   "main": "dist/index.js",
@@ -45,6 +45,7 @@
     "js-cookie": "^2.2.0",
     "koa": "^2.6.2",
     "koa-bodyparser": "^4.2.1",
+    "koa-favicon": "^2.0.1",
     "koa-generic-session": "^2.0.1",
     "koa-logger": "^3.2.0",
     "koa-mount": "^4.0.0",
@@ -70,7 +71,7 @@
   "devDependencies": {
     "babel-core": "^7.0.0-bridge.0",
     "babel-eslint": "^10.0.1",
-    "babel-jest": "^23.6.0",
+    "babel-jest": "^24.5.0",
     "eslint": "^5.10.0",
     "eslint-config-airbnb": "^17.1.0",
     "eslint-plugin-flowtype": "^3.2.0",
@@ -80,8 +81,8 @@
     "eslint-plugin-react": "^7.11.1",
     "flow-bin": "^0.89.0",
     "flow-typed": "^2.5.1",
-    "jest": "^23.6.0",
-    "jest-cli": "^23.6.0",
-    "nodemon": "^1.18.9"
+    "jest": "^24.5.0",
+    "jest-cli": "^24.5.0",
+    "nodemon": "^1.18.10"
   }
 }
