@@ -16,7 +16,7 @@ import favicon from 'koa-favicon';
 import _ from 'lodash';
 import addRoutes from './routes';
 
-import webpackConfig from '../webpack.container.config';
+import webpackConfig from '../webpack.config';
 
 import container from './container';
 
@@ -44,8 +44,8 @@ export default () => {
   } else {
     log('Production or test mode, mount static');
     const urlPrefix = '/assets';
-    // const assetsPath = path.resolve(`${__dirname}/../dist/public`);
-    const assetsPath = path.resolve(`${__dirname}/../public`);
+    const assetsPath = path.resolve(`${__dirname}/../dist/public`);
+    // const assetsPath = path.resolve(`${__dirname}/../public`);
     app.use(mount(urlPrefix, serve(assetsPath)));
   }
 

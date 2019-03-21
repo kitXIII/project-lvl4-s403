@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-import logger from '../lib/logger';
+import logger from '../lib/bin/logger';
 
 dotenv.config();
 

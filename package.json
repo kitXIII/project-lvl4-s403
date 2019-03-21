@@ -8,9 +8,10 @@
   },
   "scripts": {
     "test": "jest",
+    "build-lib": "rm -rf lib/bin && npx babel lib --out-dir lib/bin --source-maps inline",
     "build-server": "babel server --out-dir dist --source-maps inline",
     "build-app": "npx webpack -p --env production",
-    "build": "npm run build-app && npm run build-server",
+    "build": "npm run build-lib && npm run build-app && npm run build-server",
     "postinstall": "npm run build"
   },
   "repository": {
