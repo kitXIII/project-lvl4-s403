@@ -3,3 +3,8 @@
 [![Build Status](https://travis-ci.org/kitXIII/project-lvl4-s403.svg?branch=master)](https://travis-ci.org/kitXIII/project-lvl4-s403)
 
 # Frontend chat project
+
+
+## Example
+
+[Heroku live demo](https://chat-kit.herokuapp.com)
