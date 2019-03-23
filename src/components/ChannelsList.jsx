@@ -34,13 +34,9 @@ class ChannelsList extends React.Component {
     }
 
     return (
-      <div className="col-4 col-lg-3">
-        <h5>Channels</h5>
-        <hr />
-        <ul className="list-group">
-          {channels.map(channel => this.renderChannel(channel))}
-        </ul>
-      </div>
+      <ul className="list-group">
+        {channels.map(channel => this.renderChannel(channel))}
+      </ul>
     );
   }
 }

@@ -1,3 +1,22 @@
 .fade.in {
   opacity: 1;
 }
+
+.chat-container {
+  height: calc(100vh - 116px);
+}
+
+.chat-messages {
+  background-color: greenyellow;
+  flex: 1 1 70%;
+  position: relative;
+  overflow: auto;
+}
+
+.chat-input {
+  background-color: skyblue;
+  flex: none;
+  height: 10rem;
+  position: relative;
+  overflow: auto;
+}
