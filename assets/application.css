@@ -7,14 +7,12 @@
 }
 
 .chat-messages {
-  background-color: greenyellow;
   flex: 1 1 70%;
   position: relative;
   overflow: auto;
 }
 
 .chat-input {
-  background-color: skyblue;
   flex: none;
   height: 10rem;
   position: relative;
