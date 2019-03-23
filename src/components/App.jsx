@@ -18,8 +18,12 @@ const App = () => (
         <h5>Chat</h5>
         <hr />
         <div className="chat-container d-flex flex-column align-items-stretch">
-          <div className="chat-messages card p-3 mb-3">Messages field</div>
-          <div className="chat-input card p-3 mb-1">Input field</div>
+          <div className="chat-messages p-3 mb-3">
+            Messages
+          </div>
+          <div className="chat-input p-3 mb-1">
+            Input
+          </div>
         </div>
       </div>
     </div>
