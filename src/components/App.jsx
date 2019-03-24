@@ -1,5 +1,6 @@
 import React from 'react';
 import ChannelsList from './ChannelsList';
+import InputMessageForm from './InputMessageForm';
 
 const App = () => (
   <div>
@@ -21,8 +22,8 @@ const App = () => (
           <div className="chat-messages p-3 mb-3">
             Messages
           </div>
-          <div className="chat-input p-3 mb-1">
-            Input
+          <div className="chat-input">
+            <InputMessageForm />
           </div>
         </div>
       </div>

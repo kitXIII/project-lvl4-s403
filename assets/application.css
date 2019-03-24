@@ -14,7 +14,7 @@
 
 .chat-input {
   flex: none;
-  height: 10rem;
+  height: 9rem;
   position: relative;
   overflow: auto;
 }

@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux';
 import { handleActions } from 'redux-actions';
+import { reducer as formReducer } from 'redux-form';
 import * as actions from '../actions';
 
 const channelsReducer = handleActions({
@@ -21,4 +22,5 @@ const currentChannelReducer = handleActions({
 export default combineReducers({
   currentChannelId: currentChannelReducer,
   channels: channelsReducer,
+  form: formReducer,
 });
