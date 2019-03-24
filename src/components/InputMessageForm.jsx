@@ -10,8 +10,16 @@ const mapStateToProps = () => {
   return props;
 };
 
+const validate = (values) => {
+  const errors = {};
+  if (!values.text) {
+    errors.text = 'Required';
+  }
+  return errors;
+};
+
 @connect(mapStateToProps)
-@reduxForm({ form: 'message' })
+@reduxForm({ form: 'message', validate })
 class InputMessageForm extends React.Component {
   constructor(props) {
     super(props);
@@ -39,18 +47,15 @@ class InputMessageForm extends React.Component {
   }
 
   renderAutosizeTextarea = ({
-    input, className, required, rows, maxRows, placeholder, handleSubmit,
+    input, className, rows, maxRows, placeholder,
   }) => (
-    <Hotkeys keyName="ctrl+Enter" filter={() => true} onKeyDown={handleSubmit(this.handleSubmit)}>
-      <AutosizeTextarea
-        {...input}
-        className={className}
-        required={required}
-        rows={rows || 1}
-        maxRows={maxRows || rows || 1}
-        placeholder={placeholder || ''}
-      />
-    </Hotkeys>
+    <AutosizeTextarea
+      {...input}
+      className={className}
+      rows={rows || 1}
+      maxRows={maxRows || rows || 1}
+      placeholder={placeholder || ''}
+    />
   )
 
   render() {
@@ -58,22 +63,22 @@ class InputMessageForm extends React.Component {
 
     return (
       <Form onSubmit={handleSubmit(this.handleSubmit)} ref={this.formRef}>
-        <div className="d-flex flex-column">
-          <Form.Group>
-            <Field
-              className="form-control"
-              name="text"
-              component={this.renderAutosizeTextarea}
-              rows={3}
-              maxRows={8}
-              required
-              type="text"
-              placeholder="Input message here"
-              handleSubmit={handleSubmit}
-            />
-          </Form.Group>
-          <Button className="align-self-end" variant="outline-primary" size="sm" type="submit">Send</Button>
-        </div>
+        <Hotkeys keyName="ctrl+Enter" filter={() => true} onKeyDown={handleSubmit(this.handleSubmit)}>
+          <div className="d-flex flex-column">
+            <Form.Group>
+              <Field
+                className="form-control"
+                name="text"
+                component={this.renderAutosizeTextarea}
+                rows={3}
+                maxRows={8}
+                type="text"
+                placeholder="Input message here"
+              />
+            </Form.Group>
+            <Button className="align-self-end" variant="outline-primary" size="sm" type="submit">Send</Button>
+          </div>
+        </Hotkeys>
       </Form>
     );
   }
