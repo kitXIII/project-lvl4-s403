@@ -1,19 +1,16 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
 import AutosizeTextarea from 'react-autosize-textarea';
 import { Form, Button } from 'react-bootstrap';
-import * as actions from '../actions';
+import connect from '../connect';
 
 const mapStateToProps = () => {
   const props = {};
   return props;
 };
 
-const actionCreators = {
-  sendMessage: actions.sendMessage,
-};
-
+@connect(mapStateToProps)
+@reduxForm({ form: 'message' })
 class InputMessageForm extends React.Component {
   constructor(props) {
     super(props);
@@ -77,6 +74,4 @@ class InputMessageForm extends React.Component {
   }
 }
 
-const ConnectedNewTaskForm = connect(mapStateToProps, actionCreators)(InputMessageForm);
-
-export default reduxForm({ form: 'message' })(ConnectedNewTaskForm);
+export default InputMessageForm;
