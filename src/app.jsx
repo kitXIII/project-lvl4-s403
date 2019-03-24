@@ -1,22 +1,17 @@
 import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
-import { createStore, compose, applyMiddleware } from 'redux';
+import { createStore, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
+import { composeWithDevTools } from 'redux-devtools-extension';
 import reducers from './reducers';
 import { initState } from './actions';
 import App from './components/App';
 
-// eslint-disable-next-line no-underscore-dangle
-const ext = window.__REDUX_DEVTOOLS_EXTENSION__;
-const devtoolMiddleware = ext && ext();
-const thunkMiddleware = applyMiddleware(thunk);
-
 const store = createStore(
   reducers,
-  compose(
-    devtoolMiddleware,
-    thunkMiddleware,
+  composeWithDevTools(
+    applyMiddleware(thunk),
   ),
 );
 
