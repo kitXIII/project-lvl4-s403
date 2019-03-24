@@ -2,6 +2,7 @@ import React from 'react';
 import { Field, reduxForm } from 'redux-form';
 import AutosizeTextarea from 'react-autosize-textarea';
 import { Form, Button } from 'react-bootstrap';
+import Hotkeys from 'react-hot-keys';
 import connect from '../connect';
 
 const mapStateToProps = () => {
@@ -29,6 +30,7 @@ class InputMessageForm extends React.Component {
     const { sendMessage, reset } = this.props;
     sendMessage({ text });
     reset();
+    console.log(text); // eslint-disable-line no-console
   }
 
   focus = () => {
@@ -37,16 +39,18 @@ class InputMessageForm extends React.Component {
   }
 
   renderAutosizeTextarea = ({
-    input, className, required, rows, maxRows, placeholder,
+    input, className, required, rows, maxRows, placeholder, handleSubmit,
   }) => (
-    <AutosizeTextarea
-      {...input}
-      className={className}
-      required={required}
-      rows={rows || 1}
-      maxRows={maxRows || rows || 1}
-      placeholder={placeholder || ''}
-    />
+    <Hotkeys keyName="ctrl+Enter" filter={() => true} onKeyDown={handleSubmit(this.handleSubmit)}>
+      <AutosizeTextarea
+        {...input}
+        className={className}
+        required={required}
+        rows={rows || 1}
+        maxRows={maxRows || rows || 1}
+        placeholder={placeholder || ''}
+      />
+    </Hotkeys>
   )
 
   render() {
@@ -65,6 +69,7 @@ class InputMessageForm extends React.Component {
               required
               type="text"
               placeholder="Input message here"
+              handleSubmit={handleSubmit}
             />
           </Form.Group>
           <Button className="align-self-end" variant="outline-primary" size="sm" type="submit">Send</Button>
