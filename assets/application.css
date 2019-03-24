@@ -7,14 +7,13 @@
 }
 
 .chat-messages {
-  flex: 1 1 70%;
+  flex-basis: 70%;
+  flex-shrink: 1;
   position: relative;
   overflow: auto;
 }
 
 .chat-input {
-  flex: none;
-  height: 9rem;
-  position: relative;
-  overflow: auto;
+  flex-basis: 9rem;
+  flex-grow: 1;
 }

@@ -19,8 +19,10 @@ const App = () => (
         <h5>Chat</h5>
         <hr />
         <div className="chat-container d-flex flex-column align-items-stretch">
-          <div className="chat-messages p-3 mb-3">
-            Messages
+          <div className="chat-messages mb-3 p-3">
+            <p className="">
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Optio voluptates odit consectetur mollitia magnam!
+            </p>
           </div>
           <div className="chat-input">
             <InputMessageForm />

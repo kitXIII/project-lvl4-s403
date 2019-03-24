@@ -1,6 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
+import AutosizeTextarea from 'react-autosize-textarea';
+import Form from 'react-bootstrap/Form';
 import * as actions from '../actions';
 
 const mapStateToProps = () => {
@@ -19,10 +21,11 @@ class InputMessageForm extends React.Component {
   }
 
   componentDidMount() {
-    const inputField = this.formRef.current.querySelector('textarea');
-    if (inputField) {
-      inputField.focus();
-    }
+    this.focus();
+  }
+
+  componentDidUpdate() {
+    this.focus();
   }
 
   handleSubmit = ({ text }) => {
@@ -31,25 +34,43 @@ class InputMessageForm extends React.Component {
     reset();
   }
 
+  focus() {
+    const inputField = this.formRef.current.querySelector('textarea');
+    inputField.focus();
+  }
+
+  renderAutosizeTextarea = ({
+    input, className, required, rows, maxRows,
+  }) => (
+    <AutosizeTextarea
+      {...input}
+      className={className}
+      required={required}
+      rows={rows}
+      maxRows={maxRows || rows}
+    />
+  )
+
   render() {
     const { handleSubmit } = this.props;
 
     return (
-      <form onSubmit={handleSubmit(this.handleSubmit)} ref={this.formRef}>
+      <Form onSubmit={handleSubmit(this.handleSubmit)}>
         <div className="d-flex flex-column">
           <div className="form-group">
             <Field
               className="form-control"
               name="text"
-              component="textarea"
+              component={this.renderAutosizeTextarea}
+              rows={3}
+              maxRows={8}
               required
               type="text"
-              rows="3"
             />
           </div>
           <button className="btn btn-sm btn-success align-self-end" type="submit">send</button>
         </div>
-      </form>
+      </Form>
     );
   }
 }
