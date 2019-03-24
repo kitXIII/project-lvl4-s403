@@ -1,6 +1,6 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import cn from 'classnames';
+import connect from '../connect';
 
 const mapStateToProps = (state) => {
   const { channels: { byId, allIds } } = state;
@@ -9,6 +9,7 @@ const mapStateToProps = (state) => {
   return { channels, currentChannelId };
 };
 
+@connect(mapStateToProps)
 class ChannelsList extends React.Component {
   renderChannel({ id, name }) {
     const { currentChannelId } = this.props;
@@ -41,4 +42,4 @@ class ChannelsList extends React.Component {
   }
 }
 
-export default connect(mapStateToProps)(ChannelsList);
+export default ChannelsList;
