@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
 import AutosizeTextarea from 'react-autosize-textarea';
-import Form from 'react-bootstrap/Form';
+import { Form, Button } from 'react-bootstrap';
 import * as actions from '../actions';
 
 const mapStateToProps = () => {
@@ -34,20 +34,21 @@ class InputMessageForm extends React.Component {
     reset();
   }
 
-  focus() {
+  focus = () => {
     const inputField = this.formRef.current.querySelector('textarea');
     inputField.focus();
   }
 
   renderAutosizeTextarea = ({
-    input, className, required, rows, maxRows,
+    input, className, required, rows, maxRows, placeholder,
   }) => (
     <AutosizeTextarea
       {...input}
       className={className}
       required={required}
-      rows={rows}
-      maxRows={maxRows || rows}
+      rows={rows || 1}
+      maxRows={maxRows || rows || 1}
+      placeholder={placeholder || ''}
     />
   )
 
@@ -55,9 +56,9 @@ class InputMessageForm extends React.Component {
     const { handleSubmit } = this.props;
 
     return (
-      <Form onSubmit={handleSubmit(this.handleSubmit)}>
+      <Form onSubmit={handleSubmit(this.handleSubmit)} ref={this.formRef}>
         <div className="d-flex flex-column">
-          <div className="form-group">
+          <Form.Group>
             <Field
               className="form-control"
               name="text"
@@ -66,9 +67,10 @@ class InputMessageForm extends React.Component {
               maxRows={8}
               required
               type="text"
+              placeholder="Input message here"
             />
-          </div>
-          <button className="btn btn-sm btn-success align-self-end" type="submit">send</button>
+          </Form.Group>
+          <Button className="align-self-end" variant="outline-primary" size="sm" type="submit">Send</Button>
         </div>
       </Form>
     );
