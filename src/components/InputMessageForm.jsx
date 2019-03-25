@@ -5,9 +5,9 @@ import { Form, Button } from 'react-bootstrap';
 import Hotkeys from 'react-hot-keys';
 import connect from '../connect';
 
-const mapStateToProps = () => {
-  const props = {};
-  return props;
+const mapStateToProps = (state) => {
+  const { currentChannelId } = state;
+  return { currentChannelId };
 };
 
 const validate = (values) => {
@@ -35,10 +35,9 @@ class InputMessageForm extends React.Component {
   }
 
   handleSubmit = ({ text }) => {
-    const { sendMessage, reset } = this.props;
-    sendMessage({ text });
+    const { sendMessage, reset, currentChannelId } = this.props;
+    sendMessage({ text }, currentChannelId);
     reset();
-    console.log(text); // eslint-disable-line no-console
   }
 
   focus = () => {
