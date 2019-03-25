@@ -17,9 +17,12 @@ const messageSendingState = handleActions({
 
 const channelsReducer = handleActions({
   [actions.initState](state, { payload: { data } }) {
-    const { channels } = data;
+    const { channels, messages } = data;
     const allIds = channels.map(channel => channel.id);
-    const byId = channels.reduce((acc, channel) => ({ ...acc, [channel.id]: channel }), {});
+    const byId = channels.reduce((acc, channel) => {
+      const msgs = messages.filter(m => m.channelId === channel.id).map(m => m.id);
+      return { ...acc, [channel.id]: { ...channel, messages: msgs } };
+    }, {});
     return { byId, allIds };
   },
 }, {});
@@ -31,9 +34,19 @@ const currentChannelReducer = handleActions({
   },
 }, null);
 
+const messagesReducer = handleActions({
+  [actions.initState](state, { payload: { data } }) {
+    const { messages } = data;
+    const allIds = messages.map(m => m.id);
+    const byId = messages.reduce((acc, m) => ({ ...acc, [m.id]: m }), {});
+    return { byId, allIds };
+  },
+}, {});
+
 export default combineReducers({
   currentChannelId: currentChannelReducer,
   channels: channelsReducer,
+  messages: messagesReducer,
   form: formReducer,
   messageSendingState,
 });
