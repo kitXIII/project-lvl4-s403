@@ -22,7 +22,7 @@ const host = '/api/v1';
 // Send new message to channel
 // POST /channels/:channelId/messages'
 // => { data: { attributes } }
-// <= { data: { type: 'messages', id, attributes: { ...rcvAttributes, channelId, id } }}
+// <= { data: { type: 'messages', id, attributes: { ...recivedAttributes, channelId, id } }}
 
 export default {
   channelsUrl: () => [host, 'channels'].join('/'),

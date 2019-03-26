@@ -6,11 +6,17 @@
   height: calc(100vh - 116px);
 }
 
-.chat-messages {
+.chat-messages-container {
   flex-basis: 70%;
   flex-shrink: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.chat-messages {
   position: relative;
   overflow: auto;
+  flex-basis: 100%;
 }
 
 .chat-input {

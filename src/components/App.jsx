@@ -2,6 +2,7 @@ import React from 'react';
 import { Col, Row } from 'react-bootstrap';
 import ChannelsList from './ChannelsList';
 import InputMessageForm from './InputMessageForm';
+import Messages from './Messages';
 
 const App = () => (
   <div>
@@ -20,8 +21,8 @@ const App = () => (
         <h5>Chat</h5>
         <hr />
         <div className="chat-container d-flex flex-column align-items-stretch">
-          <div className="chat-messages mb-3 p-3">
-            Messages
+          <div className="chat-messages-container mb-3">
+            <Messages />
           </div>
           <div className="chat-input">
             <InputMessageForm />
