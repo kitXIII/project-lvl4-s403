@@ -13,7 +13,7 @@ const mapStateToProps = (state) => {
 class Messages extends React.Component {
   constructor(props) {
     super(props);
-    this.msgContainerRef = React.createRef();
+    this.messagesBlockRef = React.createRef();
   }
 
   componentDidMount() {
@@ -25,7 +25,7 @@ class Messages extends React.Component {
   }
 
   scrollDownMessageList = () => {
-    const scrolledBlock = this.msgContainerRef.current;
+    const scrolledBlock = this.messagesBlockRef.current;
     if (scrolledBlock) {
       scrolledBlock.scrollTop = scrolledBlock.scrollHeight;
     }
@@ -38,11 +38,11 @@ class Messages extends React.Component {
     }
 
     return (
-      <div className="chat-messages" ref={this.msgContainerRef}>
+      <div className="chat-messages" ref={this.messagesBlockRef}>
         {messages.map(m => (
           <Card key={m.id} className="mb-1">
             <Card.Body>
-              <Card.Text className="" style={{ wordBreak: 'break-all' }}>{m.text}</Card.Text>
+              <Card.Text style={{ wordBreak: 'break-all' }}>{m.text}</Card.Text>
             </Card.Body>
           </Card>
         ))}
