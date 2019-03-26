@@ -20,7 +20,7 @@ const App = () => (
       <Col sm={8} lg={9}>
         <h5>Chat</h5>
         <hr />
-        <div className="chat-container d-flex flex-column align-items-stretch">
+        <div className="chat-container">
           <div className="chat-messages-container mb-3">
             <Messages />
           </div>

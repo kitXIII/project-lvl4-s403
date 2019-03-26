@@ -4,6 +4,9 @@
 
 .chat-container {
   height: calc(100vh - 116px);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
 }
 
 .chat-messages-container {
