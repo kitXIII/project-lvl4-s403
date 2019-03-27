@@ -25,6 +25,16 @@ const channelsReducer = handleActions({
     }, {});
     return { byId, allIds };
   },
+  [actions.sendMessageSuccess](state, { payload: { message } }) {
+    const { byId, allIds } = state;
+    const { data: { id, attributes: { channelId } } } = message;
+    const channel = byId[channelId];
+    if (channel.messages.includes(id)) {
+      return state;
+    }
+    const messages = [...channel.messages, id];
+    return { allIds, byId: { ...byId, [channelId]: { ...channel, messages } } };
+  },
 }, {});
 
 const currentChannelReducer = handleActions({
@@ -40,6 +50,14 @@ const messagesReducer = handleActions({
     const allIds = messages.map(m => m.id);
     const byId = messages.reduce((acc, m) => ({ ...acc, [m.id]: m }), {});
     return { byId, allIds };
+  },
+  [actions.sendMessageSuccess](state, { payload: { message } }) {
+    const { byId, allIds } = state;
+    const { data: { id, attributes } } = message;
+    if (allIds.includes(id)) {
+      return state;
+    }
+    return { byId: { ...byId, [id]: attributes }, allIds: [...allIds, id] };
   },
 }, {});
 
