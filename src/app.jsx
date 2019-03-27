@@ -7,6 +7,7 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import reducers from './reducers';
 import { initState } from './actions';
 import App from './components/App';
+import { CurrentUserContext } from './contexts';
 
 const store = createStore(
   reducers,
@@ -15,11 +16,13 @@ const store = createStore(
   ),
 );
 
-export default (data, mountPointId) => {
+export default (data, mountPointId, username) => {
   store.dispatch(initState({ data }));
   render(
     <Provider store={store}>
-      <App />
+      <CurrentUserContext.Provider value={username}>
+        <App />
+      </CurrentUserContext.Provider>
     </Provider>,
     document.getElementById(mountPointId),
   );

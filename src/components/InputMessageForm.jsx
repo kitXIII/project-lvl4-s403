@@ -4,6 +4,7 @@ import AutosizeTextarea from 'react-autosize-textarea';
 import { Form, Button } from 'react-bootstrap';
 import Hotkeys from 'react-hot-keys';
 import connect from '../connect';
+import { currentUserContextConsumerDecorator } from '../contexts';
 
 const mapStateToProps = (state) => {
   const { currentChannelId } = state;
@@ -20,6 +21,7 @@ const validate = (values) => {
 
 @connect(mapStateToProps)
 @reduxForm({ form: 'message', validate })
+@currentUserContextConsumerDecorator()
 class InputMessageForm extends React.Component {
   constructor(props) {
     super(props);
@@ -35,8 +37,10 @@ class InputMessageForm extends React.Component {
   }
 
   handleSubmit = ({ text }) => {
-    const { sendMessage, reset, currentChannelId } = this.props;
-    sendMessage({ text }, currentChannelId);
+    const {
+      sendMessage, reset, currentChannelId, currentUser,
+    } = this.props;
+    sendMessage({ text, user: currentUser }, currentChannelId);
     reset();
   }
 

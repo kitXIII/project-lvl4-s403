@@ -1,6 +1,7 @@
 import React from 'react';
 import { Card } from 'react-bootstrap';
 import connect from '../connect';
+import { currentUserContextConsumerDecorator } from '../contexts';
 
 const mapStateToProps = (state) => {
   const { currentChannelId, channels, messages: { byId } } = state;
@@ -10,6 +11,7 @@ const mapStateToProps = (state) => {
 };
 
 @connect(mapStateToProps)
+@currentUserContextConsumerDecorator()
 class Messages extends React.Component {
   constructor(props) {
     super(props);
@@ -32,7 +34,7 @@ class Messages extends React.Component {
   }
 
   render() {
-    const { messages } = this.props;
+    const { messages, currentUser } = this.props;
     if (messages.length === 0) {
       return null;
     }
@@ -41,6 +43,9 @@ class Messages extends React.Component {
       <div className="chat-messages" ref={this.messagesBlockRef}>
         {messages.map(m => (
           <Card key={m.id} className="mb-1">
+            <Card.Header>
+              <b>{m.user === currentUser ? 'Me' : m.user}</b>
+            </Card.Header>
             <Card.Body>
               <Card.Text style={{ wordBreak: 'break-all' }}>{m.text}</Card.Text>
             </Card.Body>
