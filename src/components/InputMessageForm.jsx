@@ -36,11 +36,11 @@ class InputMessageForm extends React.Component {
     this.focus();
   }
 
-  handleSubmit = ({ text }) => {
+  handleSubmit = async ({ text }) => {
     const {
       sendMessage, reset, currentChannelId, currentUser,
     } = this.props;
-    sendMessage({ text, user: currentUser }, currentChannelId);
+    await sendMessage({ text, user: currentUser }, currentChannelId);
     reset();
   }
 
@@ -50,7 +50,7 @@ class InputMessageForm extends React.Component {
   }
 
   renderAutosizeTextarea = ({
-    input, className, rows, maxRows, placeholder,
+    input, className, rows, maxRows, placeholder, disabled,
   }) => (
     <AutosizeTextarea
       {...input}
@@ -58,11 +58,12 @@ class InputMessageForm extends React.Component {
       rows={rows || 1}
       maxRows={maxRows || rows || 1}
       placeholder={placeholder || ''}
+      disabled={disabled}
     />
   )
 
   render() {
-    const { handleSubmit } = this.props;
+    const { handleSubmit, submitting, valid } = this.props;
 
     return (
       <Form onSubmit={handleSubmit(this.handleSubmit)} ref={this.formRef}>
@@ -77,9 +78,18 @@ class InputMessageForm extends React.Component {
                 maxRows={8}
                 type="text"
                 placeholder="Input message here"
+                disabled={submitting}
               />
             </Form.Group>
-            <Button className="align-self-end" variant="outline-primary" size="sm" type="submit">Send</Button>
+            <Button
+              className="align-self-end"
+              variant="outline-primary"
+              size="sm"
+              type="submit"
+              disabled={!valid || submitting}
+            >
+              Send
+            </Button>
           </div>
         </Hotkeys>
       </Form>

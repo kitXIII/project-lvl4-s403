@@ -19,6 +19,7 @@ const store = createStore(
 export default (data, mountPointId, username, socket) => {
   store.dispatch(initState({ data }));
 
+  // eslint-disable-next-line no-console
   socket.on('connect', () => console.log('Connection established'));
   socket.on('newMessage', event => store.dispatch(receivedNewMessage({ message: event.data })));
 

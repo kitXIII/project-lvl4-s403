@@ -14,8 +14,9 @@ export const sendMessage = (message, channelId) => async (dispatch) => {
   dispatch(sendMessageRequest());
   try {
     const url = routes.messagesUrl(channelId);
-    const response = await axios.post(url, { data: { attributes: message } });
-    dispatch(receivedNewMessage({ message: response.data.data }));
+    await axios.post(url, { data: { attributes: message } });
+    // const response = await axios.post(url, { data: { attributes: message } });
+    // dispatch(receivedNewMessage({ message: response.data.data }));
     dispatch(sendMessageSuccess());
   } catch (e) {
     dispatch(sendMessageFailure());
