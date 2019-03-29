@@ -5,7 +5,7 @@ import { createStore, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import reducers from './reducers';
-import { initState } from './actions';
+import { initState, receivedNewMessage } from './actions';
 import App from './components/App';
 import { CurrentUserContext } from './contexts';
 
@@ -16,8 +16,12 @@ const store = createStore(
   ),
 );
 
-export default (data, mountPointId, username) => {
+export default (data, mountPointId, username, socket) => {
   store.dispatch(initState({ data }));
+
+  socket.on('connect', () => console.log('Connection established'));
+  socket.on('newMessage', event => store.dispatch(receivedNewMessage({ message: event.data })));
+
   render(
     <Provider store={store}>
       <CurrentUserContext.Provider value={username}>

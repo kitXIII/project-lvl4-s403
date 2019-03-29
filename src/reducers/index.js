@@ -25,9 +25,9 @@ const channelsReducer = handleActions({
     }, {});
     return { byId, allIds };
   },
-  [actions.sendMessageSuccess](state, { payload: { message } }) {
+  [actions.receivedNewMessage](state, { payload: { message } }) {
     const { byId, allIds } = state;
-    const { data: { id, attributes: { channelId } } } = message;
+    const { id, attributes: { channelId } } = message;
     const channel = byId[channelId];
     if (channel.messages.includes(id)) {
       return state;
@@ -51,9 +51,9 @@ const messagesReducer = handleActions({
     const byId = messages.reduce((acc, m) => ({ ...acc, [m.id]: m }), {});
     return { byId, allIds };
   },
-  [actions.sendMessageSuccess](state, { payload: { message } }) {
+  [actions.receivedNewMessage](state, { payload: { message } }) {
     const { byId, allIds } = state;
-    const { data: { id, attributes } } = message;
+    const { id, attributes } = message;
     if (allIds.includes(id)) {
       return state;
     }
