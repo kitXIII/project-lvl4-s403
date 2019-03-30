@@ -40,7 +40,7 @@ class Messages extends React.Component {
     }
 
     return (
-      <div className="chat-messages" ref={this.messagesBlockRef}>
+      <div className="chat-messages mb-3" ref={this.messagesBlockRef}>
         {messages.map(m => (
           <Card key={m.id} className="mb-1">
             <Card.Header>

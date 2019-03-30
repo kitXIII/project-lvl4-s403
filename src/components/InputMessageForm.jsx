@@ -66,7 +66,7 @@ class InputMessageForm extends React.Component {
     const { handleSubmit, submitting, valid } = this.props;
 
     return (
-      <Form onSubmit={handleSubmit(this.handleSubmit)} ref={this.formRef}>
+      <Form className="chat-input" onSubmit={handleSubmit(this.handleSubmit)} ref={this.formRef}>
         <Hotkeys keyName="ctrl+Enter" filter={() => true} onKeyDown={handleSubmit(this.handleSubmit)}>
           <div className="d-flex flex-column">
             <Form.Group>
