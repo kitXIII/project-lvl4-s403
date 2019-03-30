@@ -16,6 +16,4 @@
   flex-shrink: 1;
   position: relative;
   overflow: auto;
-  display: flex;
-  flex-direction: column
 }
