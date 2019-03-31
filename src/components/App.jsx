@@ -12,8 +12,8 @@ const App = () => (
       <ChannelsList />
     </Col>
     <Col sm={8} lg={9}>
-      <div className="chat-container d-flex flex-column py-3">
-        <div>
+      <div className="chat-container d-flex flex-column py-3 justify-content-end">
+        <div className="mb-auto">
           <h5>Chat</h5>
           <hr />
         </div>

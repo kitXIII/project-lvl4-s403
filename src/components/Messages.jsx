@@ -35,22 +35,21 @@ class Messages extends React.Component {
 
   render() {
     const { messages, currentUser } = this.props;
-    if (messages.length === 0) {
-      return null;
-    }
 
     return (
-      <div className="chat-messages d-flex flex-column mb-3" ref={this.messagesBlockRef}>
-        {messages.map(m => (
-          <Card key={m.id} className="mb-1">
-            <Card.Header>
-              <b>{m.user === currentUser ? 'Me' : m.user}</b>
-            </Card.Header>
-            <Card.Body>
-              <Card.Text style={{ wordBreak: 'break-all' }}>{m.text}</Card.Text>
-            </Card.Body>
-          </Card>
-        ))}
+      <div className="chat-messages flex-shink-1 mb-3" ref={this.messagesBlockRef}>
+        <div className="d-flex flex-column">
+          {messages.map(m => (
+            <Card key={m.id} className="mb-1">
+              <Card.Header>
+                <b>{m.user === currentUser ? `${m.user} (you)` : m.user}</b>
+              </Card.Header>
+              <Card.Body>
+                <Card.Text style={{ wordBreak: 'break-all' }}>{m.text}</Card.Text>
+              </Card.Body>
+            </Card>
+          ))}
+        </div>
       </div>
     );
   }
