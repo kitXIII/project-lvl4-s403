@@ -23,3 +23,5 @@ export const sendMessage = (message, channelId) => async (dispatch) => {
     throw e;
   }
 };
+
+export const setCurrentChannel = createAction('SET_CURRENT_CHANNEL');

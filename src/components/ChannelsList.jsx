@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 import React from 'react';
 import cn from 'classnames';
 import connect from '../connect';
@@ -11,9 +13,15 @@ const mapStateToProps = (state) => {
 
 @connect(mapStateToProps)
 class ChannelsList extends React.Component {
+  changeChannelHandler = id => () => {
+    const { setCurrentChannel, currentChannelId } = this.props;
+    if (currentChannelId !== id) {
+      setCurrentChannel({ id });
+    }
+  }
+
   renderChannel({ id, name }) {
     const { currentChannelId } = this.props;
-
     const itemClass = cn({
       'list-group-item': true,
       'list-group-item-action': true,
@@ -21,7 +29,7 @@ class ChannelsList extends React.Component {
     });
 
     return (
-      <li key={id} className={itemClass}>
+      <li key={id} className={itemClass} onClick={this.changeChannelHandler(id)}>
         <span>{name}</span>
       </li>
     );

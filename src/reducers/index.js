@@ -42,6 +42,9 @@ const currentChannelReducer = handleActions({
     const { currentChannelId } = data;
     return currentChannelId;
   },
+  [actions.setCurrentChannel](state, { payload: { id } }) {
+    return id;
+  },
 }, null);
 
 const messagesReducer = handleActions({
