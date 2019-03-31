@@ -7,26 +7,23 @@ import ChannelsList from './ChannelsList';
 import InputMessageForm from './InputMessageForm';
 import Messages from './Messages';
 
-const mapStateToProps = (state) => {
-  const { channels: { byId } } = state;
-  const { currentChannelId } = state;
+const mapStateToProps = ({
+  channels: { byId },
+  currentChannelId,
+  UI: { collapseMenuIsOpen },
+}) => {
   const currentChannelName = byId[currentChannelId].name;
-  return { currentChannelName };
+  return { currentChannelName, collapseMenuIsOpen };
 };
 
 @connect(mapStateToProps)
 class App extends React.Component {
-  constructor(props, context) {
-    super(props, context);
-
-    this.state = {
-      collapseMenuIsOpen: false,
-    };
-  }
-
   render() {
-    const { currentChannelName } = this.props;
-    const { collapseMenuIsOpen } = this.state;
+    const {
+      currentChannelName,
+      collapseMenuIsOpen,
+      toggleMenuCollapse,
+    } = this.props;
     return (
       <Row>
         <Col className="d-none d-sm-block py-3" sm={4} lg={3}>
@@ -43,7 +40,7 @@ class App extends React.Component {
                   <Button
                     variant="outline-dark"
                     size="sm"
-                    onClick={() => this.setState({ collapseMenuIsOpen: !collapseMenuIsOpen })}
+                    onClick={toggleMenuCollapse}
                     aria-controls="example-collapse-text"
                     aria-expanded={collapseMenuIsOpen}
                   >

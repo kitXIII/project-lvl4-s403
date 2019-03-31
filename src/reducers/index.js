@@ -64,10 +64,21 @@ const messagesReducer = handleActions({
   },
 }, {});
 
+const UIReducer = handleActions({
+  [actions.toggleMenuCollapse](state) {
+    const { collapseMenuIsOpen } = state;
+    return { collapseMenuIsOpen: !collapseMenuIsOpen };
+  },
+  [actions.setCurrentChannel]() {
+    return { collapseMenuIsOpen: false };
+  },
+}, { collapseMenuIsOpen: false });
+
 export default combineReducers({
   currentChannelId: currentChannelReducer,
   channels: channelsReducer,
   messages: messagesReducer,
   form: formReducer,
   messageSendingState,
+  UI: UIReducer,
 });
