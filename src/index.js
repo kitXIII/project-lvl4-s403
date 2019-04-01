@@ -16,7 +16,7 @@ const setFakeUserCookie = () => {
   const name = faker.internet.userName();
   cookies.set('chat_user_name', name, { expires: 365 });
   return name;
-}
+};
 
 const username = cookies.get('chat_user_name') || setFakeUserCookie();
 
