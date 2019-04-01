@@ -15,6 +15,6 @@ export const sendMessage = (message, channelId) => async (dispatch) => {
   }
 };
 
-export const receivedNewMessage = createAction('ADD_NEW_MESSAGE');
+export const addNewMessage = createAction('ADD_NEW_MESSAGE');
 export const setCurrentChannel = createAction('SET_CURRENT_CHANNEL');
 export const toggleMenuCollapse = createAction('TOGGLE_MENU_COLLAPSE');
