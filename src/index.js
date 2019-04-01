@@ -12,8 +12,13 @@ if (process.env.NODE_ENV !== 'production') {
   localStorage.debug = 'chat:*';
 }
 
-const username = cookies.get('chat_user_name') || faker.internet.userName();
-cookies.set('chat_user_name', username, { expires: 365 });
+const setFakeUserCookie = () => {
+  const name = faker.internet.userName();
+  cookies.set('chat_user_name', name, { expires: 365 });
+  return name;
+}
+
+const username = cookies.get('chat_user_name') || setFakeUserCookie();
 
 // eslint-disable-next-line no-restricted-globals
 const socket = io(location.origin);

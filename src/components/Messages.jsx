@@ -4,9 +4,9 @@ import connect from '../connect';
 import { currentUserContextConsumerDecorator } from '../contexts';
 
 const mapStateToProps = (state) => {
-  const { currentChannelId, channels, messages: { byId } } = state;
-  const channel = channels.byId[currentChannelId];
-  const messages = channel.messages.map(id => byId[id]);
+  const { currentChannelId, messages: { byId, allIds } } = state;
+  const messages = allIds.map(id => byId[id])
+    .filter(m => m.channelId === currentChannelId);
   return { messages };
 };
 
@@ -37,7 +37,7 @@ class Messages extends React.Component {
     const { messages, currentUser } = this.props;
 
     return (
-      <div className="chat-messages flex-shink-1 mb-3" ref={this.messagesBlockRef}>
+      <div className="position-relative overflow-auto flex-shink-1 mb-3" ref={this.messagesBlockRef}>
         <div className="d-flex flex-column">
           {messages.map(m => (
             <Card key={m.id} className="mb-1">

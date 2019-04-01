@@ -1,45 +1,19 @@
 import { combineReducers } from 'redux';
 import { handleActions } from 'redux-actions';
 import { reducer as formReducer } from 'redux-form';
+import { keyBy } from 'lodash';
 import * as actions from '../actions';
 
-const messageSendingState = handleActions({
-  [actions.sendMessageRequest]() {
-    return 'requested';
-  },
-  [actions.sendMessageFailure]() {
-    return 'failed';
-  },
-  [actions.sendMessageSuccess]() {
-    return 'successed';
-  },
-}, 'none');
-
 const channelsReducer = handleActions({
-  [actions.initState](state, { payload: { data } }) {
-    const { channels, messages } = data;
-    const allIds = channels.map(channel => channel.id);
-    const byId = channels.reduce((acc, channel) => {
-      const msgs = messages.filter(m => m.channelId === channel.id).map(m => m.id);
-      return { ...acc, [channel.id]: { ...channel, messages: msgs } };
-    }, {});
+  [actions.initState](state, { payload: { data: { channels } } }) {
+    const allIds = channels.map(c => c.id);
+    const byId = keyBy(channels, c => c.id);
     return { byId, allIds };
-  },
-  [actions.receivedNewMessage](state, { payload: { message } }) {
-    const { byId, allIds } = state;
-    const { id, attributes: { channelId } } = message;
-    const channel = byId[channelId];
-    if (channel.messages.includes(id)) {
-      return state;
-    }
-    const messages = [...channel.messages, id];
-    return { allIds, byId: { ...byId, [channelId]: { ...channel, messages } } };
   },
 }, {});
 
 const currentChannelReducer = handleActions({
-  [actions.initState](state, { payload: { data } }) {
-    const { currentChannelId } = data;
+  [actions.initState](state, { payload: { data: { currentChannelId } } }) {
     return currentChannelId;
   },
   [actions.setCurrentChannel](state, { payload: { id } }) {
@@ -48,25 +22,20 @@ const currentChannelReducer = handleActions({
 }, null);
 
 const messagesReducer = handleActions({
-  [actions.initState](state, { payload: { data } }) {
-    const { messages } = data;
+  [actions.initState](state, { payload: { data: { messages } } }) {
     const allIds = messages.map(m => m.id);
-    const byId = messages.reduce((acc, m) => ({ ...acc, [m.id]: m }), {});
+    const byId = keyBy(messages, m => m.id);
     return { byId, allIds };
   },
-  [actions.receivedNewMessage](state, { payload: { message } }) {
+  [actions.addNewMessage](state, { payload: { message } }) {
     const { byId, allIds } = state;
     const { id, attributes } = message;
-    if (allIds.includes(id)) {
-      return state;
-    }
     return { byId: { ...byId, [id]: attributes }, allIds: [...allIds, id] };
   },
 }, {});
 
 const UIReducer = handleActions({
-  [actions.toggleMenuCollapse](state) {
-    const { collapseMenuIsOpen } = state;
+  [actions.toggleMenuCollapse]({ collapseMenuIsOpen }) {
     return { collapseMenuIsOpen: !collapseMenuIsOpen };
   },
   [actions.setCurrentChannel]() {
@@ -79,6 +48,5 @@ export default combineReducers({
   channels: channelsReducer,
   messages: messagesReducer,
   form: formReducer,
-  messageSendingState,
-  UI: UIReducer,
+  ui: UIReducer,
 });

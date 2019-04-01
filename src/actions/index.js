@@ -4,25 +4,15 @@ import routes from '../routes';
 
 export const initState = createAction('INIT_STATE');
 
-export const receivedNewMessage = createAction('RECEIVED_NEW_MESSAGE');
-
-export const sendMessageRequest = createAction('SEND_MESSAGE_REQUEST');
-export const sendMessageSuccess = createAction('SEND_MESSAGE_SUCCESS');
-export const sendMessageFailure = createAction('SEND_MESSAGE_FAILURE');
-
 export const sendMessage = (message, channelId) => async (dispatch) => {
-  dispatch(sendMessageRequest());
   try {
     const url = routes.messagesUrl(channelId);
     await axios.post(url, { data: { attributes: message } });
-    // const response = await axios.post(url, { data: { attributes: message } });
-    // dispatch(receivedNewMessage({ message: response.data.data }));
-    dispatch(sendMessageSuccess());
   } catch (e) {
-    dispatch(sendMessageFailure());
     throw e;
   }
 };
 
+export const addNewMessage = createAction('ADD_NEW_MESSAGE');
 export const setCurrentChannel = createAction('SET_CURRENT_CHANNEL');
 export const toggleMenuCollapse = createAction('TOGGLE_MENU_COLLAPSE');

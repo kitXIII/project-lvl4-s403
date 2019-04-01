@@ -2,11 +2,3 @@
   opacity: 1;
 }
 
-.chat-container {
-  height: 100vh;
-}
-
-.chat-messages {
-  position: relative;
-  overflow: auto;
-}

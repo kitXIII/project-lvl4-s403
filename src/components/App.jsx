@@ -7,11 +7,12 @@ import ChannelsList from './ChannelsList';
 import InputMessageForm from './InputMessageForm';
 import Messages from './Messages';
 
-const mapStateToProps = ({
-  channels: { byId },
-  currentChannelId,
-  UI: { collapseMenuIsOpen },
-}) => {
+const mapStateToProps = (state) => {
+  const {
+    channels: { byId },
+    currentChannelId,
+    ui: { collapseMenuIsOpen },
+  } = state;
   const currentChannelName = byId[currentChannelId].name;
   return { currentChannelName, collapseMenuIsOpen };
 };
@@ -32,10 +33,10 @@ class App extends React.Component {
           <ChannelsList />
         </Col>
         <Col sm={8} lg={9}>
-          <div className="chat-container d-flex flex-column py-3 justify-content-end">
+          <div className="d-flex flex-column py-3 justify-content-end vh-100">
             <div className="mb-auto">
               <div className="d-flex align-items-center justify-content-between">
-                <h5 className="mb-0">{`#${currentChannelName}`}</h5>
+                <h5 className="mb-0">{`# ${currentChannelName}`}</h5>
                 <div className="d-sm-none">
                   <Button
                     variant="outline-dark"
