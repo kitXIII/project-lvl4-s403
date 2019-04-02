@@ -1,3 +1,5 @@
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+
 module.exports = {
   mode: process.env.NODE_ENV || 'development',
   entry: [
@@ -13,6 +15,12 @@ module.exports = {
     path: `${__dirname}/dist/public`,
     publicPath: '/assets/',
   },
+  optimization: {
+    splitChunks: {
+      chunks: 'all',
+      name: 'vendor',
+    },
+  },
   module: {
     rules: [
       {
@@ -22,8 +30,11 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        use: ['style-loader', 'css-loader'],
+        use: [MiniCssExtractPlugin.loader, 'css-loader'],
       },
     ],
   },
+  plugins: [
+    new MiniCssExtractPlugin(),
+  ],
 };
