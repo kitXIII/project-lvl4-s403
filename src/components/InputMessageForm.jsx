@@ -3,6 +3,8 @@ import { Field, reduxForm } from 'redux-form';
 import AutosizeTextarea from 'react-autosize-textarea';
 import { Form, Button } from 'react-bootstrap';
 import Hotkeys from 'react-hot-keys';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import connect from '../connect';
 import { currentUserContextConsumerDecorator } from '../contexts';
 
@@ -88,6 +90,7 @@ class InputMessageForm extends React.Component {
               type="submit"
               disabled={!valid || submitting}
             >
+              <FontAwesomeIcon icon={faCheck} className="mr-1" />
               Send
             </Button>
           </div>

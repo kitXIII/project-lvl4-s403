@@ -2,6 +2,8 @@ import React from 'react';
 import {
   Col, Row, Button, Collapse,
 } from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBars, faTimes } from '@fortawesome/free-solid-svg-icons';
 import connect from '../connect';
 import ChannelsList from './ChannelsList';
 import InputMessageForm from './InputMessageForm';
@@ -39,13 +41,13 @@ class App extends React.Component {
                 <h5 className="mb-0">{`# ${currentChannelName}`}</h5>
                 <div className="d-sm-none">
                   <Button
-                    variant="outline-dark"
+                    variant="light"
                     size="sm"
                     onClick={toggleMenuCollapse}
-                    aria-controls="example-collapse-text"
+                    aria-controls="example-ollapse-text"
                     aria-expanded={collapseMenuIsOpen}
                   >
-                    <span className="navbar-toggler-icon" />
+                    <FontAwesomeIcon icon={collapseMenuIsOpen ? faTimes : faBars} />
                   </Button>
                 </div>
               </div>
