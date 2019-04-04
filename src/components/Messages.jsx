@@ -45,7 +45,7 @@ class Messages extends React.Component {
                 <b>{m.user === currentUser ? `${m.user} (you)` : m.user}</b>
               </Card.Header>
               <Card.Body>
-                <Card.Text style={{ wordBreak: 'break-all' }}>{m.text}</Card.Text>
+                <Card.Text className="text-break">{m.text}</Card.Text>
               </Card.Body>
             </Card>
           ))}

@@ -5,6 +5,7 @@ import { Form, Button } from 'react-bootstrap';
 import Hotkeys from 'react-hot-keys';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
+import { trim } from 'lodash';
 import connect from '../connect';
 import { currentUserContextConsumerDecorator } from '../contexts';
 
@@ -13,10 +14,14 @@ const mapStateToProps = (state) => {
   return { currentChannelId };
 };
 
-const validate = (values) => {
+const validate = ({ text }) => {
   const errors = {};
-  if (!values.text) {
+  if (!text) {
     errors.text = 'Required';
+  }
+  const preparedText = trim(text);
+  if (!preparedText) {
+    errors.text = 'Too many spaces';
   }
   return errors;
 };
@@ -42,7 +47,8 @@ class InputMessageForm extends React.Component {
     const {
       sendMessage, reset, currentChannelId, currentUser,
     } = this.props;
-    await sendMessage({ text, user: currentUser }, currentChannelId);
+    const preparedText = trim(text);
+    await sendMessage({ text: preparedText, user: currentUser }, currentChannelId);
     reset();
   }
 
