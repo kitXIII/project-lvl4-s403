@@ -3,8 +3,9 @@ import { createAction } from 'redux-actions';
 import routes from '../routes';
 
 export const initState = createAction('INIT_STATE');
-export const setError = createAction('SET_ERROR');
 export const addNewMessage = createAction('ADD_NEW_MESSAGE');
+export const setError = createAction('SET_ERROR');
+export const deleteError = createAction('DELETE_ERROR');
 
 export const sendMessage = (message, channelId) => async (dispatch) => {
   try {
@@ -12,7 +13,8 @@ export const sendMessage = (message, channelId) => async (dispatch) => {
     const response = await axios.post(url, { data: { attributes: message } });
     dispatch(addNewMessage({ message: response.data.data }));
   } catch (e) {
-    dispatch(setError({ error: 'Some problems with sending message' }));
+    dispatch(setError({ error: 'Network error' }));
+    setTimeout(() => dispatch(deleteError()), 10000);
     throw e;
   }
 };

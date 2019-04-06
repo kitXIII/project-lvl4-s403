@@ -35,13 +35,19 @@ const messagesReducer = handleActions({
 }, {});
 
 const UIReducer = handleActions({
-  [actions.toggleMenuCollapse]({ collapseMenuIsOpen }) {
-    return { collapseMenuIsOpen: !collapseMenuIsOpen };
+  [actions.toggleMenuCollapse](state) {
+    return { ...state, collapseMenuIsOpen: !state.collapseMenuIsOpen };
   },
-  [actions.setCurrentChannel]() {
-    return { collapseMenuIsOpen: false };
+  [actions.setCurrentChannel](state) {
+    return { ...state, collapseMenuIsOpen: false };
   },
-}, { collapseMenuIsOpen: false });
+  [actions.setError](state, { payload: { error } }) {
+    return { ...state, alert: { show: true, text: error } };
+  },
+  [actions.deleteError](state) {
+    return { ...state, alert: { show: false } };
+  },
+}, { collapseMenuIsOpen: false, alert: { show: false } });
 
 export default combineReducers({
   currentChannelId: currentChannelReducer,
