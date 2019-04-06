@@ -4,8 +4,8 @@ import routes from '../routes';
 
 export const initState = createAction('INIT_STATE');
 export const addNewMessage = createAction('ADD_NEW_MESSAGE');
-export const setError = createAction('SET_ERROR');
-export const deleteError = createAction('DELETE_ERROR');
+export const setErrorAlert = createAction('SET_ERROR_ALERT');
+export const deleteErrorAlert = createAction('DELETE_ERROR_ALERT');
 
 export const sendMessage = (message, channelId) => async (dispatch) => {
   try {
@@ -13,8 +13,8 @@ export const sendMessage = (message, channelId) => async (dispatch) => {
     const response = await axios.post(url, { data: { attributes: message } });
     dispatch(addNewMessage({ message: response.data.data }));
   } catch (e) {
-    dispatch(setError({ error: 'Network error' }));
-    setTimeout(() => dispatch(deleteError()), 10000);
+    dispatch(setErrorAlert({ error: 'Network error' }));
+    setTimeout(() => dispatch(deleteErrorAlert()), 5000);
     throw e;
   }
 };

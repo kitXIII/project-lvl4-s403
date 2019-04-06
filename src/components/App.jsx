@@ -27,11 +27,11 @@ class App extends React.Component {
       collapseMenuIsOpen,
       toggleMenuCollapse,
       alert,
-      deleteError,
+      deleteErrorAlert,
     } = this.props;
     return (
       <div className="vh-100 d-flex flex-column">
-        <Alert show={alert.show} dismissible variant="danger" className="mt-3" onClose={deleteError}>
+        <Alert show={alert.show} dismissible variant="danger" className="mt-3" onClose={deleteErrorAlert}>
           {alert.text}
         </Alert>
         <Row className="h-100">
