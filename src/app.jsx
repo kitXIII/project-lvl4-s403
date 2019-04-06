@@ -21,7 +21,12 @@ export default (data, mountPointId, username, socket) => {
 
   // eslint-disable-next-line no-console
   socket.on('connect', () => console.log('Connection established'));
-  socket.on('newMessage', event => store.dispatch(addNewMessage({ message: event.data })));
+  socket.on('newMessage', (event) => {
+    const { data: { attributes: { user } } } = event;
+    if (user !== username) {
+      store.dispatch(addNewMessage({ message: event.data }));
+    }
+  });
 
   render(
     <Provider store={store}>

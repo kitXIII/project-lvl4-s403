@@ -98,7 +98,7 @@ class InputMessageForm extends React.Component {
             >
               {submitting
                 ? <span className="spinner-border spinner-border-sm mr-1" role="status" />
-                : <FontAwesomeIcon icon={faCheck} className="mr-1" />
+                : <FontAwesomeIcon icon={faCheck} className="text-success mr-1" />
               }
               Send
             </Button>
