@@ -13,7 +13,8 @@ const channelsReducer = handleActions({
   [actions.addNewChannel](state, { payload: { channel } }) {
     const { byId, allIds } = state;
     const { id, attributes } = channel;
-    return { byId: { ...byId, [id]: attributes }, allIds: [...allIds, id] };
+    const newAllIds = [...allIds, id].sort((a, b) => a - b);
+    return { byId: { ...byId, [id]: attributes }, allIds: newAllIds };
   },
 }, {});
 
@@ -35,7 +36,8 @@ const messagesReducer = handleActions({
   [actions.addNewMessage](state, { payload: { message } }) {
     const { byId, allIds } = state;
     const { id, attributes } = message;
-    return { byId: { ...byId, [id]: attributes }, allIds: [...allIds, id] };
+    const newAllIds = [...allIds, id].sort((a, b) => a - b);
+    return { byId: { ...byId, [id]: attributes }, allIds: newAllIds };
   },
 }, {});
 
