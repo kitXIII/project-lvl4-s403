@@ -11,8 +11,8 @@ import { configContextConsumerDecorator } from '../context';
 @configContextConsumerDecorator()
 class ChannelsList extends React.Component {
   handleSubmit = async ({ channelName }) => {
-    const { reset, createChannel, socketId } = this.props;
-    await createChannel(channelName, socketId);
+    const { reset, createChannel, currentSocketId } = this.props;
+    await createChannel(channelName, currentSocketId);
     reset();
   }
 

@@ -20,16 +20,11 @@ export default (data, mountPointId, currentUser, socket) => {
   store.dispatch(initState({ data }));
 
   // eslint-disable-next-line no-console
-  socket.on('connect', () => console.log('Connection established'));
-  socket.on('newMessage', (event) => {
-    const { data: { attributes: { user } } } = event;
-    if (user !== currentUser) {
-      store.dispatch(addNewMessage({ message: event.data }));
-    }
-  });
+  socket.on('newMessage', event => store.dispatch(addNewMessage({ message: event.data })));
 
   socket.on('newChannel', (event) => {
-    store.dispatch(addNewChannel({ message: event.data }));
+    // store.dispatch(addNewChannel({ message: event.data }));
+    console.log(event.data);
   });
 
   render(
@@ -37,7 +32,7 @@ export default (data, mountPointId, currentUser, socket) => {
       <ConfigContext.Provider
         value={{
           currentUser,
-          socketId: socket.id,
+          currentSocketId: socket.id,
         }}
       >
         <App />

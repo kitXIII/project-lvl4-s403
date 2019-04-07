@@ -9,6 +9,17 @@ export default (router, io, container) => {
 
   const generalChannelId = getNextId();
   const randomChannelId = getNextId();
+
+  const ioEmitWithoutSender = (eventName, data, senderSocketId) => {
+    if (io.sockets.connected[senderSocketId]) {
+      io.sockets.connected[senderSocketId].broadcast.emit(eventName, data);
+      log(`Socket.IO broadcast emit without sender socket id: ${senderSocketId}`);
+    } else {
+      io.emit(eventName, data);
+      log(`Fail Socket.IO broadcast emit without sender socket id: ${senderSocketId}`);
+    }
+  };
+
   const defaultState = {
     channels: [
       { id: generalChannelId, name: 'general', removable: false },
@@ -28,7 +39,7 @@ export default (router, io, container) => {
       ctx.status = 301;
     })
     .post('/channels', (ctx) => {
-      const { data: { attributes: { name } } } = ctx.request.body;
+      const { data: { attributes: { name }, socketId } } = ctx.request.body;
       log(`channel "${name}" addition requested`);
       const channel = {
         name,
@@ -46,7 +57,7 @@ export default (router, io, container) => {
       };
       ctx.body = data;
 
-      io.emit('newChannel', data);
+      ioEmitWithoutSender('newChannel', data, socketId);
       log(`new channel has been added: ${JSON.stringify(data)}`);
     })
     .delete('/channels/:id', (ctx) => {
@@ -98,7 +109,7 @@ export default (router, io, container) => {
     .post('/channels/:channelId/messages', (ctx) => {
       const channelId = Number(ctx.params.channelId);
       log(`channel (id: ${channelId}), new message`);
-      const { data: { attributes } } = ctx.request.body;
+      const { data: { attributes, socketId } } = ctx.request.body;
       const message = {
         ...attributes,
         channelId: Number(ctx.params.channelId),
@@ -114,7 +125,7 @@ export default (router, io, container) => {
         },
       };
       ctx.body = data;
-      io.emit('newMessage', data);
+      ioEmitWithoutSender('newMessage', data, socketId);
       log(`new message in channel (id: ${channelId}): ${JSON.stringify(data)}`);
     });
 

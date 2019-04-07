@@ -8,10 +8,10 @@ export const deleteErrorAlert = createAction('DELETE_ERROR_ALERT');
 export const toggleMenuState = createAction('TOGGLE_MENU_STATE');
 export const addNewMessage = createAction('ADD_NEW_MESSAGE');
 
-export const sendMessage = (message, channelId) => async (dispatch) => {
+export const sendMessage = (message, channelId, socketId) => async (dispatch) => {
   try {
     const url = routes.messagesUrl(channelId);
-    const response = await axios.post(url, { data: { attributes: message } });
+    const response = await axios.post(url, { data: { attributes: message, socketId } });
     dispatch(addNewMessage({ message: response.data.data }));
   } catch (e) {
     dispatch(setErrorAlert({ error: 'Network error' }));

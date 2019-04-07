@@ -18,9 +18,10 @@ const setFakeUserCookie = () => {
   return name;
 };
 
-const username = cookies.get('chat_user_name') || setFakeUserCookie();
+const currentUser = cookies.get('chat_user_name') || setFakeUserCookie();
 
 // eslint-disable-next-line no-restricted-globals
 const socket = io(location.origin);
-
-app(gon, 'chat', username, socket);
+socket.on('connect', () => {
+  app(gon, 'chat', currentUser, socket);
+});

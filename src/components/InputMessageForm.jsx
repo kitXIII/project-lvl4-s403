@@ -45,10 +45,10 @@ class InputMessageForm extends React.Component {
 
   handleSubmit = async ({ text }) => {
     const {
-      sendMessage, reset, currentChannelId, currentUser,
+      sendMessage, reset, currentChannelId, currentUser, currentSocketId,
     } = this.props;
     const preparedText = trim(text);
-    await sendMessage({ text: preparedText, user: currentUser }, currentChannelId);
+    await sendMessage({ text: preparedText, user: currentUser }, currentChannelId, currentSocketId);
     reset();
   }
 
