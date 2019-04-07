@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import { trim } from 'lodash';
 import connect from '../connect';
-import { currentUserContextConsumerDecorator } from '../contexts';
+import { configContextConsumerDecorator } from '../context';
 
 const mapStateToProps = (state) => {
   const { currentChannelId } = state;
@@ -28,7 +28,7 @@ const validate = ({ text }) => {
 
 @connect(mapStateToProps)
 @reduxForm({ form: 'message', validate })
-@currentUserContextConsumerDecorator()
+@configContextConsumerDecorator()
 class InputMessageForm extends React.Component {
   constructor(props) {
     super(props);

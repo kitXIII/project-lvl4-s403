@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card } from 'react-bootstrap';
 import connect from '../connect';
-import { currentUserContextConsumerDecorator } from '../contexts';
+import { configContextConsumerDecorator } from '../context';
 
 const mapStateToProps = (state) => {
   const { currentChannelId, messages: { byId, allIds } } = state;
@@ -11,7 +11,7 @@ const mapStateToProps = (state) => {
 };
 
 @connect(mapStateToProps)
-@currentUserContextConsumerDecorator()
+@configContextConsumerDecorator()
 class Messages extends React.Component {
   constructor(props) {
     super(props);

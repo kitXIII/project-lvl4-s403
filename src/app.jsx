@@ -5,9 +5,9 @@ import { createStore, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import reducers from './reducers';
-import { initState, addNewMessage } from './actions';
+import { initState, addNewMessage, addNewChannel } from './actions';
 import App from './components/App';
-import { CurrentUserContext } from './contexts';
+import { ConfigContext } from './context';
 
 const store = createStore(
   reducers,
@@ -16,23 +16,32 @@ const store = createStore(
   ),
 );
 
-export default (data, mountPointId, username, socket) => {
+export default (data, mountPointId, currentUser, socket) => {
   store.dispatch(initState({ data }));
 
   // eslint-disable-next-line no-console
   socket.on('connect', () => console.log('Connection established'));
   socket.on('newMessage', (event) => {
     const { data: { attributes: { user } } } = event;
-    if (user !== username) {
+    if (user !== currentUser) {
       store.dispatch(addNewMessage({ message: event.data }));
     }
   });
 
+  socket.on('newChannel', (event) => {
+    store.dispatch(addNewChannel({ message: event.data }));
+  });
+
   render(
     <Provider store={store}>
-      <CurrentUserContext.Provider value={username}>
+      <ConfigContext.Provider
+        value={{
+          currentUser,
+          socketId: socket.id,
+        }}
+      >
         <App />
-      </CurrentUserContext.Provider>
+      </ConfigContext.Provider>
     </Provider>,
     document.getElementById(mountPointId),
   );
