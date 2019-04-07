@@ -34,25 +34,29 @@ const messagesReducer = handleActions({
   },
 }, {});
 
-const UIReducer = handleActions({
-  [actions.toggleMenuCollapse](state) {
-    return { ...state, collapseMenuIsOpen: !state.collapseMenuIsOpen };
+const uiCollapseMenuReducer = handleActions({
+  [actions.toggleMenuState]({ isOpen }) {
+    return { isOpen: !isOpen };
   },
-  [actions.setCurrentChannel](state) {
-    return { ...state, collapseMenuIsOpen: false };
+  [actions.setCurrentChannel]() {
+    return { isOpen: false };
   },
-  [actions.setError](state, { payload: { error } }) {
-    return { ...state, alert: { show: true, text: error } };
+}, { isOpen: false });
+
+const alertReducer = handleActions({
+  [actions.setErrorAlert](state, { payload: { error } }) {
+    return { show: true, message: error };
   },
-  [actions.deleteError](state) {
-    return { ...state, alert: { show: false } };
+  [actions.deleteErrorAlert]() {
+    return { show: false, message: '' };
   },
-}, { collapseMenuIsOpen: false, alert: { show: false } });
+}, { show: false, message: '' });
 
 export default combineReducers({
   currentChannelId: currentChannelReducer,
   channels: channelsReducer,
   messages: messagesReducer,
   form: formReducer,
-  ui: UIReducer,
+  alert: alertReducer,
+  uiCollapseMenu: uiCollapseMenuReducer,
 });

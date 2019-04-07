@@ -8,36 +8,47 @@ import connect from '../connect';
 import ChannelsList from './ChannelsList';
 import InputMessageForm from './InputMessageForm';
 import Messages from './Messages';
+import AddChannelForm from './AddChannelForm';
 
 const mapStateToProps = (state) => {
   const {
     channels: { byId },
     currentChannelId,
-    ui: { collapseMenuIsOpen, alert },
+    uiCollapseMenu: { isOpen },
+    alert,
   } = state;
   const currentChannelName = byId[currentChannelId].name;
-  return { currentChannelName, collapseMenuIsOpen, alert };
+  return { currentChannelName, collapseMenuIsOpen: isOpen, alert };
 };
 
 @connect(mapStateToProps)
 class App extends React.Component {
+  toggleMenuCollapse = () => {
+    const { toggleMenuState } = this.props;
+    toggleMenuState();
+  }
+
+  closeAlert = () => {
+    const { deleteErrorAlert } = this.props;
+    deleteErrorAlert();
+  }
+
   render() {
     const {
       currentChannelName,
       collapseMenuIsOpen,
-      toggleMenuCollapse,
       alert,
-      deleteErrorAlert,
     } = this.props;
     return (
       <div className="vh-100 d-flex flex-column">
-        <Alert show={alert.show} dismissible variant="danger" className="mt-3" onClose={deleteErrorAlert}>
-          {alert.text}
+        <Alert show={alert.show} dismissible variant="danger" className="mt-3" onClose={this.closeAlert}>
+          {alert.message}
         </Alert>
         <Row className="h-100">
           <Col className="d-none d-sm-block py-3" sm={4} lg={3}>
             <h5>Channels</h5>
             <hr />
+            <AddChannelForm />
             <ChannelsList />
           </Col>
           <Col sm={8} lg={9} className="h-100">
@@ -49,7 +60,7 @@ class App extends React.Component {
                     <Button
                       variant="light"
                       size="sm"
-                      onClick={toggleMenuCollapse}
+                      onClick={this.toggleMenuCollapse}
                       aria-controls="example-ollapse-text"
                       aria-expanded={collapseMenuIsOpen}
                     >
@@ -60,6 +71,7 @@ class App extends React.Component {
                 <Collapse in={collapseMenuIsOpen}>
                   <div className="mt-3 d-sm-none" id="example-collapse-text">
                     <ChannelsList />
+                    <AddChannelForm />
                   </div>
                 </Collapse>
                 <hr />
