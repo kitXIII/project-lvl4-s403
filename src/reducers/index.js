@@ -10,6 +10,11 @@ const channelsReducer = handleActions({
     const byId = keyBy(channels, c => c.id);
     return { byId, allIds };
   },
+  [actions.addNewChannel](state, { payload: { channel } }) {
+    const { byId, allIds } = state;
+    const { id, attributes } = channel;
+    return { byId: { ...byId, [id]: attributes }, allIds: [...allIds, id] };
+  },
 }, {});
 
 const currentChannelReducer = handleActions({

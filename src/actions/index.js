@@ -25,9 +25,8 @@ export const addNewChannel = createAction('ADD_NEW_CHANNEL');
 export const createChannel = (name, socketId) => async (dispatch) => {
   try {
     const url = routes.channelsUrl();
-    await axios.post(url, { data: { attributes: { name }, socketId } });
-    // const response = await axios.post(url, { data: { attributes: { name } } });
-    // dispatch(addNewChannel({ channel: response.data.data }));
+    const response = await axios.post(url, { data: { attributes: { name }, socketId } });
+    dispatch(addNewChannel({ channel: response.data.data }));
   } catch (e) {
     dispatch(setErrorAlert({ error: 'Network error' }));
     throw e;

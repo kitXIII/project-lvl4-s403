@@ -21,11 +21,7 @@ export default (data, mountPointId, currentUser, socket) => {
 
   // eslint-disable-next-line no-console
   socket.on('newMessage', event => store.dispatch(addNewMessage({ message: event.data })));
-
-  socket.on('newChannel', (event) => {
-    // store.dispatch(addNewChannel({ message: event.data }));
-    console.log(event.data);
-  });
+  socket.on('newChannel', event => store.dispatch(addNewChannel({ channel: event.data })));
 
   render(
     <Provider store={store}>
