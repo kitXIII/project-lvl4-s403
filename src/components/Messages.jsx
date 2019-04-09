@@ -4,9 +4,12 @@ import connect from '../connect';
 import { configContextConsumerDecorator } from '../context';
 
 const mapStateToProps = (state) => {
-  const { currentChannelId, messages: { byId, allIds } } = state;
+  const {
+    currentChannelId: { value },
+    messages: { byId, allIds },
+  } = state;
   const messages = allIds.map(id => byId[id])
-    .filter(m => m.channelId === currentChannelId);
+    .filter(m => m.channelId === value);
   return { messages };
 };
 

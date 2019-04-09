@@ -11,8 +11,8 @@ import { configContextConsumerDecorator } from '../context';
 @configContextConsumerDecorator()
 class ChannelsList extends React.Component {
   handleSubmit = async ({ channelName }) => {
-    const { reset, createChannel, currentSocketId } = this.props;
-    await createChannel(channelName, currentSocketId);
+    const { reset, requestAddChannel, currentSocketId } = this.props;
+    await requestAddChannel(channelName, currentSocketId);
     reset();
   }
 
@@ -32,7 +32,7 @@ class ChannelsList extends React.Component {
               disabled={submitting}
             />
             <InputGroup.Append>
-              <Button variant="outline-secondary" type="submit" disabled={submitting}>
+              <Button variant="outline-secondary" type="submit" disabled={submitting} title="add channel">
                 {submitting
                   ? <span className="spinner-border spinner-border-sm mr-1" role="status" />
                   : <FontAwesomeIcon icon={faPlus} />

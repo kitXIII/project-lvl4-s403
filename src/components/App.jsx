@@ -13,7 +13,7 @@ import AddChannelForm from './AddChannelForm';
 const mapStateToProps = (state) => {
   const {
     channels: { byId },
-    currentChannelId,
+    currentChannelId: { value: currentChannelId },
     uiCollapseMenu: { isOpen },
     alert,
   } = state;
@@ -24,8 +24,8 @@ const mapStateToProps = (state) => {
 @connect(mapStateToProps)
 class App extends React.Component {
   toggleMenuCollapse = () => {
-    const { toggleMenuState } = this.props;
-    toggleMenuState();
+    const { toggleMenu } = this.props;
+    toggleMenu();
   }
 
   closeAlert = () => {

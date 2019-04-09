@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux';
 import { handleActions } from 'redux-actions';
 import { reducer as formReducer } from 'redux-form';
-import { keyBy } from 'lodash';
+import { keyBy, omit, omitBy } from 'lodash';
 import * as actions from '../actions';
 
 const channelsReducer = handleActions({
@@ -10,22 +10,35 @@ const channelsReducer = handleActions({
     const byId = keyBy(channels, c => c.id);
     return { byId, allIds };
   },
-  [actions.addNewChannel](state, { payload: { channel } }) {
+  [actions.addChannel](state, { payload: { channel } }) {
     const { byId, allIds } = state;
     const { id, attributes } = channel;
     const newAllIds = [...allIds, id].sort((a, b) => a - b);
     return { byId: { ...byId, [id]: attributes }, allIds: newAllIds };
   },
+  [actions.deleteChannel](state, { payload: { channelId } }) {
+    const { byId, allIds } = state;
+    const newAllIds = [...allIds].filter(id => id !== channelId);
+    const newById = omit(byId, channelId);
+    return { byId: newById, allIds: newAllIds };
+  },
 }, {});
 
 const currentChannelReducer = handleActions({
   [actions.initState](state, { payload: { data: { currentChannelId } } }) {
-    return currentChannelId;
+    return { value: currentChannelId, defaultValue: currentChannelId };
   },
   [actions.setCurrentChannel](state, { payload: { id } }) {
-    return id;
+    return { ...state, value: id };
   },
-}, null);
+  [actions.deleteChannel](state, { payload: { channelId } }) {
+    const { value, defaultValue } = state;
+    if (value === channelId) {
+      return { ...state, value: defaultValue };
+    }
+    return state;
+  },
+}, {});
 
 const messagesReducer = handleActions({
   [actions.initState](state, { payload: { data: { messages } } }) {
@@ -33,16 +46,22 @@ const messagesReducer = handleActions({
     const byId = keyBy(messages, m => m.id);
     return { byId, allIds };
   },
-  [actions.addNewMessage](state, { payload: { message } }) {
+  [actions.addMessage](state, { payload: { message } }) {
     const { byId, allIds } = state;
     const { id, attributes } = message;
     const newAllIds = [...allIds, id].sort((a, b) => a - b);
     return { byId: { ...byId, [id]: attributes }, allIds: newAllIds };
   },
+  [actions.deleteChannel](state, { payload: { channelId } }) {
+    const { byId, allIds } = state;
+    const newAllIds = [...allIds].filter(id => byId[id].channelId !== channelId);
+    const newById = omitBy(byId, c => c.channelId === channelId);
+    return { byId: newById, allIds: newAllIds };
+  },
 }, {});
 
 const uiCollapseMenuReducer = handleActions({
-  [actions.toggleMenuState]({ isOpen }) {
+  [actions.toggleMenu]({ isOpen }) {
     return { isOpen: !isOpen };
   },
   [actions.setCurrentChannel]() {

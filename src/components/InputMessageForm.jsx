@@ -10,8 +10,8 @@ import connect from '../connect';
 import { configContextConsumerDecorator } from '../context';
 
 const mapStateToProps = (state) => {
-  const { currentChannelId } = state;
-  return { currentChannelId };
+  const { currentChannelId: { value } } = state;
+  return { currentChannelId: value };
 };
 
 const validate = ({ text }) => {
@@ -45,10 +45,11 @@ class InputMessageForm extends React.Component {
 
   handleSubmit = async ({ text }) => {
     const {
-      sendMessage, reset, currentChannelId, currentUser, currentSocketId,
+      requestAddMessage, reset, currentChannelId, currentUser, currentSocketId,
     } = this.props;
     const preparedText = trim(text);
-    await sendMessage({ text: preparedText, user: currentUser }, currentChannelId, currentSocketId);
+    // eslint-disable-next-line max-len
+    await requestAddMessage({ text: preparedText, user: currentUser }, currentChannelId, currentSocketId);
     reset();
   }
 
