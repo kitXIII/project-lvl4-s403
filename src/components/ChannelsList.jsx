@@ -22,10 +22,9 @@ class ChannelsList extends React.Component {
     }
   }
 
-  deleteChannelHandler = id => async (e) => {
-    e.stopPropagation();
-    const { requestDeleteChannel, currentSocketId } = this.props;
-    await requestDeleteChannel(id, currentSocketId);
+  deleteChannelHandler = id => () => {
+    const { openChannelDeletionDialog } = this.props;
+    openChannelDeletionDialog({ id });
   }
 
   renderChannel({ id, name, removable }) {

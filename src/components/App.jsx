@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  Col, Row, Button, Collapse, Alert,
+  Col, Row, Button, Collapse,
 } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faTimes } from '@fortawesome/free-solid-svg-icons';
@@ -9,16 +9,17 @@ import ChannelsList from './ChannelsList';
 import InputMessageForm from './InputMessageForm';
 import Messages from './Messages';
 import AddChannelForm from './AddChannelForm';
+import ChannelDeletionConfirmationModal from './ChannelDeletionConfirmationModal';
+import Alerts from './Alerts';
 
 const mapStateToProps = (state) => {
   const {
     channels: { byId },
     currentChannelId: { value: currentChannelId },
     uiCollapseMenu: { isOpen },
-    alert,
   } = state;
   const currentChannelName = byId[currentChannelId].name;
-  return { currentChannelName, collapseMenuIsOpen: isOpen, alert };
+  return { currentChannelName, collapseMenuIsOpen: isOpen };
 };
 
 @connect(mapStateToProps)
@@ -28,22 +29,14 @@ class App extends React.Component {
     toggleMenu();
   }
 
-  closeAlert = () => {
-    const { deleteErrorAlert } = this.props;
-    deleteErrorAlert();
-  }
-
   render() {
     const {
       currentChannelName,
       collapseMenuIsOpen,
-      alert,
     } = this.props;
     return (
       <div className="vh-100 d-flex flex-column">
-        <Alert show={alert.show} dismissible variant="danger" className="mt-3" onClose={this.closeAlert}>
-          {alert.message}
-        </Alert>
+        <Alerts />
         <Row className="h-100">
           <Col className="d-none d-sm-block py-3" sm={4} lg={3}>
             <h5>Channels</h5>
@@ -81,6 +74,7 @@ class App extends React.Component {
             </div>
           </Col>
         </Row>
+        <ChannelDeletionConfirmationModal />
       </div>
     );
   }

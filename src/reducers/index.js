@@ -22,7 +22,7 @@ const channelsReducer = handleActions({
     const newById = omit(byId, channelId);
     return { byId: newById, allIds: newAllIds };
   },
-}, {});
+}, { byId: {}, allIds: [] });
 
 const currentChannelReducer = handleActions({
   [actions.initState](state, { payload: { data: { currentChannelId } } }) {
@@ -58,7 +58,7 @@ const messagesReducer = handleActions({
     const newById = omitBy(byId, c => c.channelId === channelId);
     return { byId: newById, allIds: newAllIds };
   },
-}, {});
+}, { byId: {}, allIds: [] });
 
 const uiCollapseMenuReducer = handleActions({
   [actions.toggleMenu]({ isOpen }) {
@@ -69,20 +69,35 @@ const uiCollapseMenuReducer = handleActions({
   },
 }, { isOpen: false });
 
-const alertReducer = handleActions({
-  [actions.setErrorAlert](state, { payload: { error } }) {
-    return { show: true, message: error };
+const alertsReducer = handleActions({
+  [actions.addAlert](state, { payload: { alert } }) {
+    const { byId, allIds } = state;
+    const { id } = alert;
+    return { byId: { ...byId, [id]: alert }, allIds: [...allIds, id] };
   },
-  [actions.deleteErrorAlert]() {
-    return { show: false, message: '' };
+  [actions.deleteAlert](state, { payload: { id } }) {
+    const { byId, allIds } = state;
+    const newAllIds = [...allIds].filter(alertId => id !== alertId);
+    const newById = omit(byId, id);
+    return { byId: newById, allIds: newAllIds };
   },
-}, { show: false, message: '' });
+}, { byId: {}, allIds: [] });
+
+const channelDeletionConfirmationReducer = handleActions({
+  [actions.openChannelDeletionDialog](state, { payload: { id } }) {
+    return { show: true, id };
+  },
+  [actions.closeChannelDeletionDialog](state) {
+    return { ...state, show: false };
+  },
+}, { show: false, id: null });
 
 export default combineReducers({
   currentChannelId: currentChannelReducer,
   channels: channelsReducer,
   messages: messagesReducer,
   form: formReducer,
-  alert: alertReducer,
+  alerts: alertsReducer,
   uiCollapseMenu: uiCollapseMenuReducer,
+  channelDeletionConfirmation: channelDeletionConfirmationReducer,
 });
