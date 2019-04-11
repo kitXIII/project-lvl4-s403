@@ -6,7 +6,7 @@ import thunk from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import reducers from './reducers';
 import {
-  initState, addMessage, addChannel, deleteChannel,
+  initState, addMessage, addChannel, deleteChannel, showAlert,
 } from './actions';
 import App from './components/App';
 import { ConfigContext } from './context';
@@ -23,7 +23,13 @@ export default (data, mountPointId, currentUser, socket) => {
 
   socket.on('newMessage', event => store.dispatch(addMessage({ message: event.data })));
   socket.on('newChannel', event => store.dispatch(addChannel({ channel: event.data })));
-  socket.on('removeChannel', event => store.dispatch(deleteChannel({ channelId: event.data.id })));
+  socket.on('removeChannel', (event) => {
+    const { id } = event.data;
+    const { channels: { byId } } = store.getState();
+    const { name } = byId[id];
+    store.dispatch(deleteChannel({ channelId: id }));
+    showAlert('warning', `Channel "${name}" has been deleted`)(store.dispatch);
+  });
 
   render(
     <Provider store={store}>

@@ -1,13 +1,19 @@
 import React from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import connect from '../connect';
+import { configContextConsumerDecorator } from '../context';
 
 const mapStateToProps = (state) => {
-  const { channels: { byId }, channelDeletionConfirmation: { show, id } } = state;
+  const {
+    channels: { byId },
+    channelDeletionConfirmation: { show, id },
+
+  } = state;
   return { show, id, channel: byId[id] };
 };
 
 @connect(mapStateToProps)
+@configContextConsumerDecorator()
 class ChannelDeletionConfirmationModal extends React.Component {
   handleClose = () => {
     const { closeChannelDeletionDialog } = this.props;
@@ -15,11 +21,13 @@ class ChannelDeletionConfirmationModal extends React.Component {
   }
 
   handleConfirmChannelDeletion = async () => {
-    const { requestDeleteChannel, channel, id } = this.props;
+    const {
+      requestDeleteChannel, channel, id, currentSocketId,
+    } = this.props;
     if (!channel || !channel.removable) {
       return;
     }
-    await requestDeleteChannel(id);
+    await requestDeleteChannel(id, currentSocketId);
     this.handleClose();
   }
 

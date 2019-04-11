@@ -43,11 +43,11 @@ export const requestAddChannel = (name, socketId) => async (dispatch) => {
   }
 };
 
-export const requestDeleteChannel = channelId => async (dispatch) => {
+export const requestDeleteChannel = (channelId, socketId) => async (dispatch) => {
   try {
     const url = routes.channelUrl(channelId);
-    await axios.delete(url);
-    dispatch(showAlert('success', 'OK'));
+    await axios.delete(url, { data: { socketId } });
+    dispatch(showAlert('success', 'Channel has been deleted'));
   } catch (e) {
     showAlert('error', 'Network error');
     throw e;

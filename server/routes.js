@@ -62,6 +62,7 @@ export default (router, io, container) => {
     })
     .delete('/channels/:id', (ctx) => {
       const channelId = Number(ctx.params.id);
+      const { socketId } = ctx.request.body;
       log(`channel (id: ${channelId}) deletion requested`);
       state.channels = state.channels.filter(c => c.id !== channelId);
       state.messages = state.messages.filter(m => m.channelId !== channelId);
@@ -72,7 +73,7 @@ export default (router, io, container) => {
           id: channelId,
         },
       };
-      io.emit('removeChannel', data);
+      ioEmitWithoutSender('removeChannel', data, socketId);
       log(`channel (id: ${channelId}) has been deleted`);
     })
     .patch('/channels/:id', (ctx) => {
