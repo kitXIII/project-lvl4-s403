@@ -6,10 +6,12 @@ import { configContextConsumerDecorator } from '../context';
 const mapStateToProps = (state) => {
   const {
     channels: { byId },
-    channelDeletionConfirmation: { show },
+    channelDeletionConfirmation,
     currentlyDeletedChannel: { id },
   } = state;
-  return { show, channel: byId[id] };
+  const channel = byId[id];
+  const channelName = channel && channel.name;
+  return { state: channelDeletionConfirmation, channel, channelName };
 };
 
 @connect(mapStateToProps)
@@ -28,29 +30,48 @@ class ChannelDeletionConfirmationModal extends React.Component {
       return;
     }
     await requestDeleteChannel(channel.id, currentSocketId);
-    this.handleClose();
   }
 
   render() {
-    const { show, channel } = this.props;
-    if (!channel) {
-      return null;
-    }
+    const { state, channelName } = this.props;
     return (
-      <Modal show={show} onHide={this.handleClose}>
+      <Modal show={state !== 'init'} onHide={this.handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Delete channel</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {`Do you really want to delete the channel "${channel.name}"`}
+          {state === 'prepare' || state === 'pending' || state === 'fail'
+            ? `Do you really want to delete the channel "${channelName}"`
+            : 'Channel has been deleted'
+          }
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={this.handleClose}>
-            Cancel
-          </Button>
-          <Button variant="danger" onClick={this.handleConfirmChannelDeletion}>
-            Delete
-          </Button>
+          {state === 'prepare' || state === 'fail'
+            ? (
+              <Button variant="secondary" onClick={this.handleClose}>
+                Cancel
+              </Button>
+            )
+            : null}
+          {state === 'prepare' || state === 'pending' || state === 'fail'
+            ? (
+              <Button variant="danger" onClick={this.handleConfirmChannelDeletion}>
+                {state === 'pending'
+                  ? (
+                    <span>
+                      <span className="spinner-border spinner-border-sm mr-1" role="status" />
+                      Working...
+                    </span>)
+                  : 'Delete'
+                }
+              </Button>
+            ) : null}
+          {state === 'success'
+            ? (
+              <Button variant="success" onClick={this.handleClose}>
+                Success
+              </Button>
+            ) : null}
         </Modal.Footer>
       </Modal>
     );

@@ -91,12 +91,21 @@ const currentlyDeletedChannelReducer = handleActions({
 
 const channelDeletionConfirmationReducer = handleActions({
   [actions.openChannelDeletionDialog]() {
-    return { show: true };
+    return 'prepare';
+  },
+  [actions.deleteChannelRequest]() {
+    return 'pending';
+  },
+  [actions.deleteChannelSuccess]() {
+    return 'success';
+  },
+  [actions.deleteChannelFailure]() {
+    return 'fail';
   },
   [actions.closeChannelDeletionDialog]() {
-    return { show: false };
+    return 'init';
   },
-}, { show: false });
+}, 'init');
 
 export default combineReducers({
   currentChannelId: currentChannelReducer,
