@@ -28,9 +28,12 @@ export const requestAddMessage = (message, channelId, socketId) => async (dispat
 
 export const setCurrentChannel = createAction('CURRENT_CHANNEL_SET');
 export const addChannel = createAction('CHANNEL_ADD');
-export const deleteChannel = createAction('CHANNEL_DELETE');
 export const openChannelDeletionDialog = createAction('CHANNEL_DELETION_DIALOG_OPEN');
 export const closeChannelDeletionDialog = createAction('CHANNEL_DELETION_DIALOG_CLOSE');
+export const deleteChannelRequest = createAction('CHANNEL_DELETE_REQUEST');
+export const deleteChannelSuccess = createAction('CHANNEL_DELETE_SUCCESS');
+export const deleteChannelFailure = createAction('CHANNEL_DELETE_FAILURE');
+
 
 export const requestAddChannel = (name, socketId) => async (dispatch) => {
   try {
@@ -44,12 +47,13 @@ export const requestAddChannel = (name, socketId) => async (dispatch) => {
 };
 
 export const requestDeleteChannel = (channelId, socketId) => async (dispatch) => {
+  dispatch(deleteChannelRequest());
+  const url = routes.channelUrl(channelId);
   try {
-    const url = routes.channelUrl(channelId);
     await axios.delete(url, { data: { socketId } });
-    dispatch(showAlert('success', 'Channel has been deleted'));
+    dispatch(deleteChannelSuccess({ channelId }));
   } catch (e) {
-    showAlert('error', 'Network error');
+    dispatch(deleteChannelFailure());
     throw e;
   }
 };

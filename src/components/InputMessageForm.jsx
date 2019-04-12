@@ -92,7 +92,7 @@ class InputMessageForm extends React.Component {
             </Form.Group>
             <Button
               className="align-self-end"
-              variant="outline-primary"
+              variant="outline-secondary"
               size="sm"
               type="submit"
               disabled={!valid || submitting}

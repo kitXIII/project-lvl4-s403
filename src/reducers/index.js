@@ -16,7 +16,7 @@ const channelsReducer = handleActions({
     const newAllIds = [...allIds, id].sort((a, b) => a - b);
     return { byId: { ...byId, [id]: attributes }, allIds: newAllIds };
   },
-  [actions.deleteChannel](state, { payload: { channelId } }) {
+  [actions.deleteChannelSuccess](state, { payload: { channelId } }) {
     const { byId, allIds } = state;
     const newAllIds = [...allIds].filter(id => id !== channelId);
     const newById = omit(byId, channelId);
@@ -31,7 +31,7 @@ const currentChannelReducer = handleActions({
   [actions.setCurrentChannel](state, { payload: { id } }) {
     return { ...state, value: id };
   },
-  [actions.deleteChannel](state, { payload: { channelId } }) {
+  [actions.deleteChannelSuccess](state, { payload: { channelId } }) {
     const { value, defaultValue } = state;
     if (value === channelId) {
       return { ...state, value: defaultValue };
@@ -52,7 +52,7 @@ const messagesReducer = handleActions({
     const newAllIds = [...allIds, id].sort((a, b) => a - b);
     return { byId: { ...byId, [id]: attributes }, allIds: newAllIds };
   },
-  [actions.deleteChannel](state, { payload: { channelId } }) {
+  [actions.deleteChannelSuccess](state, { payload: { channelId } }) {
     const { byId, allIds } = state;
     const newAllIds = [...allIds].filter(id => byId[id].channelId !== channelId);
     const newById = omitBy(byId, c => c.channelId === channelId);
@@ -83,14 +83,20 @@ const alertsReducer = handleActions({
   },
 }, { byId: {}, allIds: [] });
 
-const channelDeletionConfirmationReducer = handleActions({
+const currentlyDeletedChannelReducer = handleActions({
   [actions.openChannelDeletionDialog](state, { payload: { id } }) {
-    return { show: true, id };
+    return { id };
   },
-  [actions.closeChannelDeletionDialog](state) {
-    return { ...state, show: false };
+}, {});
+
+const channelDeletionConfirmationReducer = handleActions({
+  [actions.openChannelDeletionDialog]() {
+    return { show: true };
   },
-}, { show: false, id: null });
+  [actions.closeChannelDeletionDialog]() {
+    return { show: false };
+  },
+}, { show: false });
 
 export default combineReducers({
   currentChannelId: currentChannelReducer,
@@ -100,4 +106,5 @@ export default combineReducers({
   alerts: alertsReducer,
   uiCollapseMenu: uiCollapseMenuReducer,
   channelDeletionConfirmation: channelDeletionConfirmationReducer,
+  currentlyDeletedChannel: currentlyDeletedChannelReducer,
 });

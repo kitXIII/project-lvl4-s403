@@ -6,10 +6,10 @@ import { configContextConsumerDecorator } from '../context';
 const mapStateToProps = (state) => {
   const {
     channels: { byId },
-    channelDeletionConfirmation: { show, id },
-
+    channelDeletionConfirmation: { show },
+    currentlyDeletedChannel: { id },
   } = state;
-  return { show, id, channel: byId[id] };
+  return { show, channel: byId[id] };
 };
 
 @connect(mapStateToProps)
@@ -22,12 +22,12 @@ class ChannelDeletionConfirmationModal extends React.Component {
 
   handleConfirmChannelDeletion = async () => {
     const {
-      requestDeleteChannel, channel, id, currentSocketId,
+      requestDeleteChannel, channel, currentSocketId,
     } = this.props;
     if (!channel || !channel.removable) {
       return;
     }
-    await requestDeleteChannel(id, currentSocketId);
+    await requestDeleteChannel(channel.id, currentSocketId);
     this.handleClose();
   }
 
