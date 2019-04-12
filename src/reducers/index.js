@@ -89,7 +89,16 @@ const currentlyDeletedChannelReducer = handleActions({
   },
 }, {});
 
-const channelDeletionConfirmationReducer = handleActions({
+const uiChannelDeletionModalReducer = handleActions({
+  [actions.openChannelDeletionDialog]() {
+    return { show: true };
+  },
+  [actions.closeChannelDeletionDialog]() {
+    return { show: false };
+  },
+}, { show: false });
+
+const channelDeletionStateReducer = handleActions({
   [actions.openChannelDeletionDialog]() {
     return 'prepare';
   },
@@ -113,7 +122,8 @@ export default combineReducers({
   messages: messagesReducer,
   form: formReducer,
   alerts: alertsReducer,
-  uiCollapseMenu: uiCollapseMenuReducer,
-  channelDeletionConfirmation: channelDeletionConfirmationReducer,
+  channelDeletionState: channelDeletionStateReducer,
   currentlyDeletedChannel: currentlyDeletedChannelReducer,
+  uiCollapseMenu: uiCollapseMenuReducer,
+  uiChannelDeletionModal: uiChannelDeletionModalReducer,
 });

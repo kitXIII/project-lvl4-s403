@@ -6,12 +6,15 @@ import { configContextConsumerDecorator } from '../context';
 const mapStateToProps = (state) => {
   const {
     channels: { byId },
-    channelDeletionConfirmation,
     currentlyDeletedChannel: { id },
+    channelDeletionState,
+    uiChannelDeletionModal: { show },
   } = state;
   const channel = byId[id];
   const channelName = channel && channel.name;
-  return { state: channelDeletionConfirmation, channel, channelName };
+  return {
+    show, state: channelDeletionState, channel, channelName,
+  };
 };
 
 @connect(mapStateToProps)
@@ -33,17 +36,18 @@ class ChannelDeletionConfirmationModal extends React.Component {
   }
 
   render() {
-    const { state, channelName } = this.props;
+    const { show, state, channelName } = this.props;
     return (
-      <Modal show={state !== 'init'} onHide={this.handleClose}>
+      <Modal show={show} onHide={this.handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Delete channel</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {state === 'prepare' || state === 'pending' || state === 'fail'
+          {state === 'prepare' || state === 'pending'
             ? `Do you really want to delete the channel "${channelName}"`
-            : 'Channel has been deleted'
-          }
+            : null}
+          {state === 'fail' ? `Some problem with deletion the channel "${channelName}"` : null}
+          {state === 'success' ? 'Channel has been deleted' : null}
         </Modal.Body>
         <Modal.Footer>
           {state === 'prepare' || state === 'fail'
