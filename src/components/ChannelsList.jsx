@@ -1,10 +1,25 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React from 'react';
 import cn from 'classnames';
+import { Dropdown } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash, faPen } from '@fortawesome/free-solid-svg-icons';
+import { faCog } from '@fortawesome/free-solid-svg-icons';
 import connect from '../connect';
+
+const CustomToggle = React.forwardRef(({ onClick, children }, ref) => {
+  const handleClick = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onClick(e);
+  };
+  return (
+    <div ref={ref} onClick={handleClick}>
+      {children}
+    </div>
+  );
+});
 
 const mapStateToProps = (state) => {
   const { channels: { byId, allIds } } = state;
@@ -48,22 +63,23 @@ class ChannelsList extends React.Component {
       <li key={id} className={itemClass} onClick={this.changeChannelHandler(id)}>
         {name}
         {!removable ? null : (
-          <div>
-            <FontAwesomeIcon
-              icon={faPen}
-              title="rename channel"
-              className="text-dark mr-3"
-              style={{ fontSize: '0.85em', cursor: 'pointer' }}
-              onClick={this.renameChannelHandler(id)}
-            />
-            <FontAwesomeIcon
-              icon={faTrash}
-              title="remove channel"
-              className="text-dark"
-              style={{ fontSize: '0.85em', cursor: 'pointer' }}
-              onClick={this.deleteChannelHandler(id)}
-            />
-          </div>
+          <Dropdown drop="left">
+            <Dropdown.Toggle as={CustomToggle}>
+              <FontAwesomeIcon
+                icon={faCog}
+                className="text-dark"
+                style={{ cursor: 'pointer' }}
+              />
+            </Dropdown.Toggle>
+            <Dropdown.Menu>
+              <Dropdown.Item onClick={this.renameChannelHandler(id)}>
+                Rename channel
+              </Dropdown.Item>
+              <Dropdown.Item onClick={this.deleteChannelHandler(id)}>
+                Delete channel
+              </Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
         )}
       </li>
     );

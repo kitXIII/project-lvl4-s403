@@ -3,21 +3,31 @@ import { Field, reduxForm } from 'redux-form';
 import { Form, InputGroup, Button } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { trim } from 'lodash';
 import connect from '../connect';
 import { configContextConsumerDecorator } from '../context';
 
+const validate = ({ channelName }) => {
+  const errors = {};
+  const preparedValue = trim(channelName);
+  if (!preparedValue) {
+    errors.channelName = 'Required';
+  }
+  return errors;
+};
+
 @connect()
-@reduxForm({ form: 'сhannelToAdd' })
+@reduxForm({ form: 'сhannelToAdd', validate })
 @configContextConsumerDecorator()
 class ChannelsList extends React.Component {
   handleSubmit = async ({ channelName }) => {
     const { reset, requestAddChannel, currentSocketId } = this.props;
-    await requestAddChannel(channelName, currentSocketId);
+    await requestAddChannel(trim(channelName), currentSocketId);
     reset();
   }
 
   render() {
-    const { handleSubmit, submitting } = this.props;
+    const { handleSubmit, submitting, valid } = this.props;
     return (
       <Form className="mt-3" onSubmit={handleSubmit(this.handleSubmit)}>
         <Form.Group>
@@ -28,11 +38,15 @@ class ChannelsList extends React.Component {
               component="input"
               type="text"
               placeholder="add channel"
-              required
               disabled={submitting}
             />
             <InputGroup.Append>
-              <Button variant="outline-secondary" type="submit" disabled={submitting} title="add channel">
+              <Button
+                variant="outline-secondary"
+                type="submit"
+                disabled={!valid || submitting}
+                title="add channel"
+              >
                 {submitting
                   ? <span className="spinner-border spinner-border-sm mr-1" role="status" />
                   : <FontAwesomeIcon icon={faPlus} />
