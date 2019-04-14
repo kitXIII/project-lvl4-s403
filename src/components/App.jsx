@@ -9,7 +9,8 @@ import ChannelsList from './ChannelsList';
 import InputMessageForm from './InputMessageForm';
 import Messages from './Messages';
 import AddChannelForm from './AddChannelForm';
-import ChannelDeletionConfirmationModal from './ChannelDeletionConfirmationModal';
+import ChannelDeletionModal from './ChannelDeletionModal';
+import ChannelUpdatingModal from './ChannelUpdatingModal';
 import Alerts from './Alerts';
 
 const mapStateToProps = (state) => {
@@ -74,7 +75,8 @@ class App extends React.Component {
             </div>
           </Col>
         </Row>
-        <ChannelDeletionConfirmationModal />
+        <ChannelDeletionModal />
+        <ChannelUpdatingModal />
       </div>
     );
   }

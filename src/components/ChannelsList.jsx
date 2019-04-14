@@ -3,7 +3,7 @@
 import React from 'react';
 import cn from 'classnames';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faTrash, faPen } from '@fortawesome/free-solid-svg-icons';
 import connect from '../connect';
 
 const mapStateToProps = (state) => {
@@ -27,6 +27,11 @@ class ChannelsList extends React.Component {
     openChannelDeletionDialog({ id });
   }
 
+  renameChannelHandler = id => () => {
+    const { openChannelUpdatingDialog } = this.props;
+    openChannelUpdatingDialog({ id });
+  }
+
   renderChannel({ id, name, removable }) {
     const { currentChannelId } = this.props;
     const itemClass = cn({
@@ -43,13 +48,22 @@ class ChannelsList extends React.Component {
       <li key={id} className={itemClass} onClick={this.changeChannelHandler(id)}>
         {name}
         {!removable ? null : (
-          <FontAwesomeIcon
-            icon={faTrash}
-            title="remove channel"
-            className="text-dark"
-            style={{ fontSize: '0.85em', cursor: 'pointer' }}
-            onClick={this.deleteChannelHandler(id)}
-          />
+          <div>
+            <FontAwesomeIcon
+              icon={faPen}
+              title="rename channel"
+              className="text-dark mr-3"
+              style={{ fontSize: '0.85em', cursor: 'pointer' }}
+              onClick={this.renameChannelHandler(id)}
+            />
+            <FontAwesomeIcon
+              icon={faTrash}
+              title="remove channel"
+              className="text-dark"
+              style={{ fontSize: '0.85em', cursor: 'pointer' }}
+              onClick={this.deleteChannelHandler(id)}
+            />
+          </div>
         )}
       </li>
     );

@@ -19,7 +19,7 @@ const mapStateToProps = (state) => {
 
 @connect(mapStateToProps)
 @configContextConsumerDecorator()
-class ChannelDeletionConfirmationModal extends React.Component {
+class ChannelDeletionModal extends React.Component {
   handleClose = () => {
     const { closeChannelDeletionDialog } = this.props;
     closeChannelDeletionDialog();
@@ -82,4 +82,4 @@ class ChannelDeletionConfirmationModal extends React.Component {
   }
 }
 
-export default ChannelDeletionConfirmationModal;
+export default ChannelDeletionModal;

@@ -6,7 +6,7 @@ import thunk from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import reducers from './reducers';
 import {
-  initState, addMessage, addChannel, deleteChannelSuccess, showAlert,
+  initState, addMessage, addChannel, deleteChannelSuccess, showAlert, updateChannel,
 } from './actions';
 import App from './components/App';
 import { ConfigContext } from './context';
@@ -29,6 +29,13 @@ export default (data, mountPointId, currentUser, socket) => {
     const { name } = byId[id];
     store.dispatch(deleteChannelSuccess({ channelId: id }));
     showAlert('warning', `Channel "${name}" has been deleted`)(store.dispatch);
+  });
+  socket.on('renameChannel', (event) => {
+    const { data: channel } = event;
+    const { channels: { byId } } = store.getState();
+    const { name } = byId[channel.id];
+    store.dispatch(updateChannel({ channel }));
+    showAlert('warning', `Channel "${name}" was renamed to "${channel.attributes.name}"`)(store.dispatch);
   });
 
   render(

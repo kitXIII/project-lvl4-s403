@@ -21,7 +21,7 @@ const validate = ({ text }) => {
   }
   const preparedText = trim(text);
   if (!preparedText) {
-    errors.text = 'Too many spaces';
+    errors.text = 'Required';
   }
   return errors;
 };

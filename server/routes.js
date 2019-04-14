@@ -81,6 +81,7 @@ export default (router, io, container) => {
       const channel = state.channels.find(c => c.id === channelId);
 
       const { attributes } = ctx.request.body.data;
+      const { socketId } = ctx.request.body;
       log(`requested channel (id: ${channelId}) change with attributes: ${JSON.stringify(attributes)}`);
       const oldName = channel.name;
       channel.name = attributes.name;
@@ -92,7 +93,7 @@ export default (router, io, container) => {
           attributes: channel,
         },
       };
-      io.emit('renameChannel', data);
+      ioEmitWithoutSender('renameChannel', data, socketId);
       log(`сhannel (id: ${channelId}) renamed from ${oldName} to ${attributes.name}`);
     })
     .get('/channels/:channelId/messages', (ctx) => {

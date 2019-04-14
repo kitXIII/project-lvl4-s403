@@ -22,6 +22,11 @@ const channelsReducer = handleActions({
     const newById = omit(byId, channelId);
     return { byId: newById, allIds: newAllIds };
   },
+  [actions.updateChannel](state, { payload: { channel } }) {
+    const { byId, allIds } = state;
+    const { id, attributes } = channel;
+    return { byId: { ...byId, [id]: attributes }, allIds };
+  },
 }, { byId: {}, allIds: [] });
 
 const currentChannelReducer = handleActions({
@@ -116,6 +121,21 @@ const channelDeletionStateReducer = handleActions({
   },
 }, 'init');
 
+const currentlyUpdatingChannelReducer = handleActions({
+  [actions.openChannelUpdatingDialog](state, { payload: { id } }) {
+    return { id };
+  },
+}, {});
+
+const uiChannelUpdatingModalReducer = handleActions({
+  [actions.openChannelUpdatingDialog]() {
+    return { show: true };
+  },
+  [actions.closeChannelUpdatingDialog]() {
+    return { show: false };
+  },
+}, { show: false });
+
 export default combineReducers({
   currentChannelId: currentChannelReducer,
   channels: channelsReducer,
@@ -124,6 +144,8 @@ export default combineReducers({
   alerts: alertsReducer,
   channelDeletionState: channelDeletionStateReducer,
   currentlyDeletedChannel: currentlyDeletedChannelReducer,
+  currentlyUpdatingChannel: currentlyUpdatingChannelReducer,
   uiCollapseMenu: uiCollapseMenuReducer,
   uiChannelDeletionModal: uiChannelDeletionModalReducer,
+  uiChannelUpdatingModal: uiChannelUpdatingModalReducer,
 });

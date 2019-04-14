@@ -57,3 +57,13 @@ export const requestDeleteChannel = (channelId, socketId) => async (dispatch) =>
     throw e;
   }
 };
+
+export const openChannelUpdatingDialog = createAction('CHANNEL_UPDATING_DIALOG_OPEN');
+export const closeChannelUpdatingDialog = createAction('CHANNEL_UPDATING_DIALOG_CLOSE');
+export const updateChannel = createAction('CHANNEL_UPDATE');
+
+export const requestUpdateChannel = (id, attributes, socketId) => async (dispatch) => {
+  const url = routes.channelUrl(id);
+  await axios.patch(url, { data: { attributes }, socketId });
+  dispatch(updateChannel({ channel: { id, attributes } }));
+};
