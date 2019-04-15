@@ -1,7 +1,7 @@
 import React from 'react';
 import { Field, reduxForm } from 'redux-form';
 import { Modal, Form, Button } from 'react-bootstrap';
-import { trim } from 'lodash';
+import { trimStart, trimEnd } from 'lodash';
 import connect from '../connect';
 import { configContextConsumerDecorator } from '../context';
 
@@ -18,7 +18,7 @@ const mapStateToProps = (state) => {
 
 const validate = ({ newChannelName }) => {
   const errors = {};
-  const preparedValue = trim(newChannelName);
+  const preparedValue = trimEnd(newChannelName);
   if (!preparedValue) {
     errors.newChannelName = 'Required';
   }
@@ -46,7 +46,7 @@ class ChannelUpdatingModal extends React.Component {
     if (!channel.removable) {
       return;
     }
-    const updatedChannel = { ...channel, name: trim(newChannelName) };
+    const updatedChannel = { ...channel, name: trimEnd(newChannelName) };
     await requestUpdateChannel(channel.id, updatedChannel, currentSocketId);
   }
 
@@ -62,7 +62,7 @@ class ChannelUpdatingModal extends React.Component {
             component="input"
             type="text"
             placeholder={`Channel "${name}" rename to ...`}
-            required
+            normalize={trimStart}
             disabled={submitting}
           />
         </Form.Group>

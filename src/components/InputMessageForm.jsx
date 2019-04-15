@@ -5,7 +5,7 @@ import { Form, Button } from 'react-bootstrap';
 import Hotkeys from 'react-hot-keys';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
-import { trim } from 'lodash';
+import { trimStart, trimEnd } from 'lodash';
 import connect from '../connect';
 import { configContextConsumerDecorator } from '../context';
 
@@ -16,10 +16,7 @@ const mapStateToProps = (state) => {
 
 const validate = ({ text }) => {
   const errors = {};
-  if (!text) {
-    errors.text = 'Required';
-  }
-  const preparedText = trim(text);
+  const preparedText = trimEnd(text);
   if (!preparedText) {
     errors.text = 'Required';
   }
@@ -47,7 +44,7 @@ class InputMessageForm extends React.Component {
     const {
       requestAddMessage, reset, currentChannelId, currentUser, currentSocketId,
     } = this.props;
-    const preparedText = trim(text);
+    const preparedText = trimEnd(text);
     // eslint-disable-next-line max-len
     await requestAddMessage({ text: preparedText, user: currentUser }, currentChannelId, currentSocketId);
     reset();
@@ -88,6 +85,7 @@ class InputMessageForm extends React.Component {
                 type="text"
                 placeholder="Input message here"
                 disabled={submitting}
+                normalize={trimStart}
               />
             </Form.Group>
             <Button
