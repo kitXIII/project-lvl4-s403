@@ -28,11 +28,19 @@ const validate = ({ newChannelName }) => {
 @connect(mapStateToProps)
 @reduxForm({
   form: 'newChannelName',
-  enableReinitialize: true,
   validate,
 })
 @configContextConsumerDecorator()
 class ChannelUpdatingModal extends React.Component {
+  componentDidUpdate(prevProps) {
+    const { show: prevShow } = prevProps;
+    const { show, name, initialize } = this.props;
+    if (prevShow === false && show === true) {
+      console.log(prevShow);
+      initialize({ newChannelName: name });
+    }
+  }
+
   handleClose = () => {
     const { closeChannelUpdatingDialog, reset } = this.props;
     closeChannelUpdatingDialog();
@@ -54,7 +62,7 @@ class ChannelUpdatingModal extends React.Component {
 
   renderForm() {
     const {
-      name, handleSubmit, submitting, submitSucceeded,
+      handleSubmit, submitting, submitSucceeded,
     } = this.props;
 
     if (submitSucceeded) {
@@ -69,7 +77,6 @@ class ChannelUpdatingModal extends React.Component {
             name="newChannelName"
             component="input"
             type="text"
-            placeholder={`Channel "${name}" rename to ...`}
             normalize={trimStart}
             disabled={submitting}
           />
