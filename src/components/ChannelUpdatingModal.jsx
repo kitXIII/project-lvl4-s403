@@ -19,7 +19,7 @@ const mapStateToProps = (state) => {
 const validate = ({ newChannelName }) => {
   const errors = {};
   const preparedValue = trimEnd(newChannelName);
-  if (!preparedValue) {
+  if (preparedValue === '') {
     errors.newChannelName = 'Required';
   }
   return errors;
@@ -43,15 +43,23 @@ class ChannelUpdatingModal extends React.Component {
     const {
       requestUpdateChannel, currentSocketId, channel,
     } = this.props;
+
     if (!channel.removable) {
       return;
     }
+
     const updatedChannel = { ...channel, name: trimEnd(newChannelName) };
     await requestUpdateChannel(channel.id, updatedChannel, currentSocketId);
   }
 
   renderForm() {
-    const { name, handleSubmit, submitting } = this.props;
+    const {
+      name, handleSubmit, submitting, submitSucceeded,
+    } = this.props;
+
+    if (submitSucceeded) {
+      return 'Channel updated successful';
+    }
 
     return (
       <Form onSubmit={handleSubmit(this.handleConfirmChannelUpdating)}>
@@ -70,8 +78,21 @@ class ChannelUpdatingModal extends React.Component {
     );
   }
 
+  renderCancelButton() {
+    const { submitting, submitSucceeded } = this.props;
+    if (submitting || submitSucceeded) {
+      return null;
+    }
+    return <Button variant="secondary" onClick={this.handleClose}>Cancel</Button>;
+  }
+
   renderApplyButton() {
-    const { handleSubmit, submitting, valid } = this.props;
+    const {
+      handleSubmit, submitting, valid, submitSucceeded,
+    } = this.props;
+    if (submitSucceeded) {
+      return null;
+    }
     return (
       <Button
         onClick={handleSubmit(this.handleConfirmChannelUpdating)}
@@ -89,26 +110,28 @@ class ChannelUpdatingModal extends React.Component {
     );
   }
 
+  renderSuccessButton() {
+    const { submitSucceeded } = this.props;
+    if (!submitSucceeded) {
+      return null;
+    }
+    return <Button onClick={this.handleClose} variant="success">OK</Button>;
+  }
+
   render() {
-    const {
-      show, submitting, submitSucceeded,
-    } = this.props;
+    const { show, submitting } = this.props;
     return (
       <Modal show={show} onHide={this.handleClose}>
         <Modal.Header closeButton={!submitting}>
           <Modal.Title>Rename channel</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {submitSucceeded ? 'Channel updated successful' : this.renderForm()}
+          {this.renderForm()}
         </Modal.Body>
         <Modal.Footer>
-          {submitting || submitSucceeded ? null : (
-            <Button variant="secondary" onClick={this.handleClose}>Cancel</Button>
-          )}
-          {submitSucceeded ? null : this.renderApplyButton()}
-          {!submitSucceeded ? null : (
-            <Button onClick={this.handleClose} variant="success">OK</Button>
-          )}
+          {this.renderCancelButton()}
+          {this.renderApplyButton()}
+          {this.renderSuccessButton()}
         </Modal.Footer>
       </Modal>
     );

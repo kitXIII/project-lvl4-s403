@@ -31,10 +31,8 @@ const mapStateToProps = (state) => {
 @connect(mapStateToProps)
 class ChannelsList extends React.Component {
   changeChannelHandler = id => () => {
-    const { setCurrentChannel, currentChannelId } = this.props;
-    if (currentChannelId !== id) {
-      setCurrentChannel({ id });
-    }
+    const { setCurrentChannel } = this.props;
+    setCurrentChannel({ id });
   }
 
   deleteChannelHandler = id => () => {
@@ -47,8 +45,35 @@ class ChannelsList extends React.Component {
     openChannelUpdatingDialog({ id });
   }
 
-  renderChannel({ id, name, removable }) {
+  renderDropdownChannelProperties(channel) {
+    const { id, removable } = channel;
+    if (!removable) {
+      return null;
+    }
+    return (
+      <Dropdown drop="left">
+        <Dropdown.Toggle as={CustomToggle}>
+          <FontAwesomeIcon
+            icon={faCog}
+            className="text-dark"
+            style={{ cursor: 'pointer' }}
+          />
+        </Dropdown.Toggle>
+        <Dropdown.Menu>
+          <Dropdown.Item onClick={this.renameChannelHandler(id)}>
+            Rename channel
+          </Dropdown.Item>
+          <Dropdown.Item onClick={this.deleteChannelHandler(id)}>
+            Delete channel
+          </Dropdown.Item>
+        </Dropdown.Menu>
+      </Dropdown>
+    );
+  }
+
+  renderChannel(channel) {
     const { currentChannelId } = this.props;
+    const { id, name } = channel;
     const itemClass = cn({
       'list-group-item': true,
       'list-group-item-action': true,
@@ -62,25 +87,7 @@ class ChannelsList extends React.Component {
     return (
       <li key={id} className={itemClass} onClick={this.changeChannelHandler(id)}>
         {name}
-        {!removable ? null : (
-          <Dropdown drop="left">
-            <Dropdown.Toggle as={CustomToggle}>
-              <FontAwesomeIcon
-                icon={faCog}
-                className="text-dark"
-                style={{ cursor: 'pointer' }}
-              />
-            </Dropdown.Toggle>
-            <Dropdown.Menu>
-              <Dropdown.Item onClick={this.renameChannelHandler(id)}>
-                Rename channel
-              </Dropdown.Item>
-              <Dropdown.Item onClick={this.deleteChannelHandler(id)}>
-                Delete channel
-              </Dropdown.Item>
-            </Dropdown.Menu>
-          </Dropdown>
-        )}
+        {this.renderDropdownChannelProperties(channel)}
       </li>
     );
   }
