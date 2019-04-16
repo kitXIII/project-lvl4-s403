@@ -71,7 +71,7 @@ class ChannelsList extends React.Component {
     );
   }
 
-  renderChannel(channel) {
+  renderChannel = (channel) => {
     const { currentChannelId } = this.props;
     const { id, name } = channel;
     const itemClass = cn({
@@ -101,7 +101,7 @@ class ChannelsList extends React.Component {
 
     return (
       <ul className="list-group">
-        {channels.map(channel => this.renderChannel(channel))}
+        {channels.map(this.renderChannel)}
       </ul>
     );
   }
