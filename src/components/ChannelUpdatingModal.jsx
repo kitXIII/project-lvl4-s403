@@ -32,11 +32,25 @@ const validate = ({ newChannelName }) => {
 })
 @configContextConsumerDecorator()
 class ChannelUpdatingModal extends React.Component {
+  constructor(props) {
+    super(props);
+    this.successButtonRef = React.createRef();
+    this.formRef = React.createRef();
+  }
+
   componentDidUpdate(prevProps) {
     const { show: prevShow } = prevProps;
-    const { show, name, initialize } = this.props;
+    const {
+      show, name, initialize, submitSucceeded,
+    } = this.props;
     if (prevShow === false && show === true) {
       initialize({ newChannelName: name });
+
+      const input = this.formRef.current.querySelector('input');
+      input.focus();
+    }
+    if (submitSucceeded) {
+      this.successButtonRef.current.focus();
     }
   }
 
@@ -69,7 +83,7 @@ class ChannelUpdatingModal extends React.Component {
     }
 
     return (
-      <Form onSubmit={handleSubmit(this.handleConfirmChannelUpdating)}>
+      <Form onSubmit={handleSubmit(this.handleConfirmChannelUpdating)} ref={this.formRef}>
         <Form.Group>
           <Field
             className="form-control"
@@ -121,7 +135,7 @@ class ChannelUpdatingModal extends React.Component {
     if (!submitSucceeded) {
       return null;
     }
-    return <Button onClick={this.handleClose} variant="success">OK</Button>;
+    return <Button onClick={this.handleClose} variant="success" ref={this.successButtonRef}>OK</Button>;
   }
 
   render() {

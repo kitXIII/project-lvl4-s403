@@ -20,6 +20,22 @@ const mapStateToProps = (state) => {
 @connect(mapStateToProps)
 @configContextConsumerDecorator()
 class ChannelDeletionModal extends React.Component {
+  constructor(props) {
+    super(props);
+    this.successButtonRef = React.createRef();
+    this.cancelButtonRef = React.createRef();
+  }
+
+  componentDidUpdate() {
+    const { state } = this.props;
+    if (state === 'success') {
+      this.successButtonRef.current.focus();
+    }
+    if (state === 'prepare') {
+      this.cancelButtonRef.current.focus();
+    }
+  }
+
   handleClose = () => {
     const { closeChannelDeletionDialog } = this.props;
     closeChannelDeletionDialog();
@@ -40,7 +56,9 @@ class ChannelDeletionModal extends React.Component {
     if (state !== 'prepare' && state !== 'fail') {
       return null;
     }
-    return <Button variant="secondary" onClick={this.handleClose}>Cancel</Button>;
+    return (
+      <Button variant="secondary" onClick={this.handleClose} ref={this.cancelButtonRef}>Cancel</Button>
+    );
   }
 
   renderDeleteButton() {
@@ -67,7 +85,7 @@ class ChannelDeletionModal extends React.Component {
     if (state !== 'success') {
       return null;
     }
-    return <Button variant="success" onClick={this.handleClose}>Success</Button>;
+    return <Button variant="success" onClick={this.handleClose} ref={this.successButtonRef}>OK</Button>;
   }
 
   render() {
