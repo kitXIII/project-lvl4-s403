@@ -36,7 +36,6 @@ class ChannelUpdatingModal extends React.Component {
     const { show: prevShow } = prevProps;
     const { show, name, initialize } = this.props;
     if (prevShow === false && show === true) {
-      console.log(prevShow);
       initialize({ newChannelName: name });
     }
   }
