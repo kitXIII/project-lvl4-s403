@@ -83,7 +83,7 @@ class InputMessageForm extends React.Component {
           : (
             <React.Fragment>
               <FontAwesomeIcon icon={faCheck} className="text-success d-none d-sm-inline" />
-              <FontAwesomeIcon icon={faPaperPlane} className="d-sm-none" />
+              <FontAwesomeIcon icon={faPaperPlane} className="text-primary d-sm-none" />
             </React.Fragment>
           )
         }

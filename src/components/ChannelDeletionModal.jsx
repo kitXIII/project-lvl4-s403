@@ -29,10 +29,14 @@ class ChannelDeletionModal extends React.Component {
   componentDidUpdate() {
     const { state } = this.props;
     if (state === 'success') {
-      this.successButtonRef.current.focus();
+      if (this.successButtonRef.current) {
+        this.successButtonRef.current.focus();
+      }
     }
     if (state === 'prepare') {
-      this.cancelButtonRef.current.focus();
+      if (this.cancelButtonRef.current) {
+        this.cancelButtonRef.current.focus();
+      }
     }
   }
 
