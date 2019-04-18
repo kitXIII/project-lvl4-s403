@@ -108,7 +108,7 @@ class ChannelUpdatingModal extends React.Component {
 
   renderApplyButton() {
     const {
-      handleSubmit, submitting, valid, submitSucceeded,
+      handleSubmit, submitting, valid, submitSucceeded, pristine,
     } = this.props;
     if (submitSucceeded) {
       return null;
@@ -118,7 +118,7 @@ class ChannelUpdatingModal extends React.Component {
         onClick={handleSubmit(this.handleConfirmChannelUpdating)}
         variant="warning"
         type="submit"
-        disabled={!valid || submitting}
+        disabled={!valid || submitting || pristine}
       >
         {!submitting ? 'Apply' : (
           <React.Fragment>
