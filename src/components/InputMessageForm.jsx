@@ -4,8 +4,8 @@ import AutosizeTextarea from 'react-autosize-textarea';
 import { Form, Button } from 'react-bootstrap';
 import Hotkeys from 'react-hot-keys';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheck } from '@fortawesome/free-solid-svg-icons';
-import { trim } from 'lodash';
+import { faCheck, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
+import { trimStart, trimEnd } from 'lodash';
 import connect from '../connect';
 import { configContextConsumerDecorator } from '../context';
 
@@ -16,10 +16,7 @@ const mapStateToProps = (state) => {
 
 const validate = ({ text }) => {
   const errors = {};
-  if (!text) {
-    errors.text = 'Required';
-  }
-  const preparedText = trim(text);
+  const preparedText = trimEnd(text);
   if (!preparedText) {
     errors.text = 'Required';
   }
@@ -47,7 +44,7 @@ class InputMessageForm extends React.Component {
     const {
       requestAddMessage, reset, currentChannelId, currentUser, currentSocketId,
     } = this.props;
-    const preparedText = trim(text);
+    const preparedText = trimEnd(text);
     // eslint-disable-next-line max-len
     await requestAddMessage({ text: preparedText, user: currentUser }, currentChannelId, currentSocketId);
     reset();
@@ -71,14 +68,38 @@ class InputMessageForm extends React.Component {
     />
   )
 
+  renderSubmitButton() {
+    const { submitting, valid } = this.props;
+    return (
+      <Button
+        className="align-self-end mb-3 mb-sm-0 ml-2 ml-sm-0"
+        variant="outline-secondary"
+        size="sm"
+        type="submit"
+        disabled={!valid || submitting}
+      >
+        {submitting
+          ? <span className="spinner-border spinner-border-sm" role="status" />
+          : (
+            <React.Fragment>
+              <FontAwesomeIcon icon={faCheck} className="text-success d-none d-sm-inline" />
+              <FontAwesomeIcon icon={faPaperPlane} className="text-primary d-sm-none" />
+            </React.Fragment>
+          )
+        }
+        <span className="d-none d-sm-inline ml-1">Send</span>
+      </Button>
+    );
+  }
+
   render() {
-    const { handleSubmit, submitting, valid } = this.props;
+    const { handleSubmit, submitting } = this.props;
 
     return (
       <Form className="flex-srink-0" onSubmit={handleSubmit(this.handleSubmit)} ref={this.formRef}>
         <Hotkeys keyName="ctrl+Enter" filter={() => true} onKeyDown={handleSubmit(this.handleSubmit)}>
-          <div className="d-flex flex-column">
-            <Form.Group>
+          <div className="d-flex flex-sm-column">
+            <Form.Group className="flex-grow-1">
               <Field
                 className="form-control"
                 name="text"
@@ -88,21 +109,10 @@ class InputMessageForm extends React.Component {
                 type="text"
                 placeholder="Input message here"
                 disabled={submitting}
+                normalize={trimStart}
               />
             </Form.Group>
-            <Button
-              className="align-self-end"
-              variant="outline-secondary"
-              size="sm"
-              type="submit"
-              disabled={!valid || submitting}
-            >
-              {submitting
-                ? <span className="spinner-border spinner-border-sm mr-1" role="status" />
-                : <FontAwesomeIcon icon={faCheck} className="text-success mr-1" />
-              }
-              Send
-            </Button>
+            {this.renderSubmitButton()}
           </div>
         </Hotkeys>
       </Form>

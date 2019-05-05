@@ -3,13 +3,13 @@ import { Field, reduxForm } from 'redux-form';
 import { Form, InputGroup, Button } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import { trim } from 'lodash';
+import { trimStart, trimEnd } from 'lodash';
 import connect from '../connect';
 import { configContextConsumerDecorator } from '../context';
 
 const validate = ({ channelName }) => {
   const errors = {};
-  const preparedValue = trim(channelName);
+  const preparedValue = trimEnd(channelName);
   if (!preparedValue) {
     errors.channelName = 'Required';
   }
@@ -22,7 +22,7 @@ const validate = ({ channelName }) => {
 class ChannelsList extends React.Component {
   handleSubmit = async ({ channelName }) => {
     const { reset, requestAddChannel, currentSocketId } = this.props;
-    await requestAddChannel(trim(channelName), currentSocketId);
+    await requestAddChannel(trimEnd(channelName), currentSocketId);
     reset();
   }
 
@@ -38,6 +38,7 @@ class ChannelsList extends React.Component {
               component="input"
               type="text"
               placeholder="add channel"
+              normalize={trimStart}
               disabled={submitting}
             />
             <InputGroup.Append>

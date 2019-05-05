@@ -1,7 +1,7 @@
 import React from 'react';
 import { Field, reduxForm } from 'redux-form';
 import { Modal, Form, Button } from 'react-bootstrap';
-import { trim } from 'lodash';
+import { trimStart, trimEnd } from 'lodash';
 import connect from '../connect';
 import { configContextConsumerDecorator } from '../context';
 
@@ -18,8 +18,8 @@ const mapStateToProps = (state) => {
 
 const validate = ({ newChannelName }) => {
   const errors = {};
-  const preparedValue = trim(newChannelName);
-  if (!preparedValue) {
+  const preparedValue = trimEnd(newChannelName);
+  if (preparedValue === '') {
     errors.newChannelName = 'Required';
   }
   return errors;
@@ -28,11 +28,32 @@ const validate = ({ newChannelName }) => {
 @connect(mapStateToProps)
 @reduxForm({
   form: 'newChannelName',
-  enableReinitialize: true,
   validate,
 })
 @configContextConsumerDecorator()
 class ChannelUpdatingModal extends React.Component {
+  constructor(props) {
+    super(props);
+    this.successButtonRef = React.createRef();
+    this.formRef = React.createRef();
+  }
+
+  componentDidUpdate(prevProps) {
+    const { show: prevShow } = prevProps;
+    const {
+      show, name, initialize, submitSucceeded,
+    } = this.props;
+    if (prevShow === false && show === true) {
+      initialize({ newChannelName: name });
+
+      const input = this.formRef.current.querySelector('input');
+      input.focus();
+    }
+    if (submitSucceeded) {
+      this.successButtonRef.current.focus();
+    }
+  }
+
   handleClose = () => {
     const { closeChannelUpdatingDialog, reset } = this.props;
     closeChannelUpdatingDialog();
@@ -43,26 +64,33 @@ class ChannelUpdatingModal extends React.Component {
     const {
       requestUpdateChannel, currentSocketId, channel,
     } = this.props;
+
     if (!channel.removable) {
       return;
     }
-    const updatedChannel = { ...channel, name: trim(newChannelName) };
+
+    const updatedChannel = { ...channel, name: trimEnd(newChannelName) };
     await requestUpdateChannel(channel.id, updatedChannel, currentSocketId);
   }
 
   renderForm() {
-    const { name, handleSubmit, submitting } = this.props;
+    const {
+      handleSubmit, submitting, submitSucceeded,
+    } = this.props;
+
+    if (submitSucceeded) {
+      return 'Channel updated successful';
+    }
 
     return (
-      <Form onSubmit={handleSubmit(this.handleConfirmChannelUpdating)}>
+      <Form onSubmit={handleSubmit(this.handleConfirmChannelUpdating)} ref={this.formRef}>
         <Form.Group>
           <Field
             className="form-control"
             name="newChannelName"
             component="input"
             type="text"
-            placeholder={`Channel "${name}" rename to ...`}
-            required
+            normalize={trimStart}
             disabled={submitting}
           />
         </Form.Group>
@@ -70,14 +98,27 @@ class ChannelUpdatingModal extends React.Component {
     );
   }
 
+  renderCancelButton() {
+    const { submitting, submitSucceeded } = this.props;
+    if (submitting || submitSucceeded) {
+      return null;
+    }
+    return <Button variant="secondary" onClick={this.handleClose}>Cancel</Button>;
+  }
+
   renderApplyButton() {
-    const { handleSubmit, submitting, valid } = this.props;
+    const {
+      handleSubmit, submitting, valid, submitSucceeded, pristine,
+    } = this.props;
+    if (submitSucceeded) {
+      return null;
+    }
     return (
       <Button
         onClick={handleSubmit(this.handleConfirmChannelUpdating)}
         variant="warning"
         type="submit"
-        disabled={!valid || submitting}
+        disabled={!valid || submitting || pristine}
       >
         {!submitting ? 'Apply' : (
           <React.Fragment>
@@ -89,26 +130,28 @@ class ChannelUpdatingModal extends React.Component {
     );
   }
 
+  renderSuccessButton() {
+    const { submitSucceeded } = this.props;
+    if (!submitSucceeded) {
+      return null;
+    }
+    return <Button onClick={this.handleClose} variant="success" ref={this.successButtonRef}>OK</Button>;
+  }
+
   render() {
-    const {
-      show, submitting, submitSucceeded,
-    } = this.props;
+    const { show, submitting } = this.props;
     return (
       <Modal show={show} onHide={this.handleClose}>
         <Modal.Header closeButton={!submitting}>
           <Modal.Title>Rename channel</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {submitSucceeded ? 'Channel updated successful' : this.renderForm()}
+          {this.renderForm()}
         </Modal.Body>
         <Modal.Footer>
-          {submitting || submitSucceeded ? null : (
-            <Button variant="secondary" onClick={this.handleClose}>Cancel</Button>
-          )}
-          {submitSucceeded ? null : this.renderApplyButton()}
-          {!submitSucceeded ? null : (
-            <Button onClick={this.handleClose} variant="success">OK</Button>
-          )}
+          {this.renderCancelButton()}
+          {this.renderApplyButton()}
+          {this.renderSuccessButton()}
         </Modal.Footer>
       </Modal>
     );
