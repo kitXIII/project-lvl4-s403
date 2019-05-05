@@ -40,7 +40,7 @@ class Messages extends React.Component {
     const { messages, currentUser } = this.props;
 
     return (
-      <div className="position-relative overflow-auto flex-shink-1 mb-3" ref={this.messagesBlockRef}>
+      <div className="position-relative overflow-auto flex-shrink-1 mb-3" ref={this.messagesBlockRef}>
         <div className="d-flex flex-column">
           {messages.map(m => (
             <Card key={m.id} className="mb-1">
