@@ -124,7 +124,8 @@ class ChannelUpdatingModal extends React.Component {
           <React.Fragment>
             <span className="spinner-border spinner-border-sm mr-1" role="status" />
             Applying
-          </React.Fragment>)
+          </React.Fragment>
+        )
         }
       </Button>
     );

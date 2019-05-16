@@ -77,7 +77,8 @@ class ChannelDeletionModal extends React.Component {
             <span>
               <span className="spinner-border spinner-border-sm mr-1" role="status" />
               Working...
-            </span>)
+            </span>
+          )
           : 'Delete'
         }
       </Button>
