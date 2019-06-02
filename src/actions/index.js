@@ -1,7 +1,13 @@
 import axios from 'axios';
 import { createAction } from 'redux-actions';
 import { uniqueId } from 'lodash';
+import { SubmissionError } from 'redux-form';
+
 import routes from '../routes';
+import logger from '../../lib/bin/logger';
+
+const log = logger('action:');
+const errLog = logger('error:action:');
 
 export const initState = createAction('STATE_INIT');
 export const addAlert = createAction('ERROR_ALERT_SET');
@@ -18,11 +24,13 @@ export const showAlert = (type, message) => (dispatch) => {
 export const requestAddMessage = (message, channelId, socketId) => async (dispatch) => {
   try {
     const url = routes.messagesUrl(channelId);
+    log(`request: add message: ${JSON.stringify(message)}`);
     const response = await axios.post(url, { data: { attributes: message, socketId } });
     dispatch(addMessage({ message: response.data.data }));
+    log(`add message response satus: ${response.status}`);
   } catch (e) {
     showAlert('error', 'Network error');
-    throw e;
+    errLog(`add message error: ${e.message}`);
   }
 };
 
@@ -34,15 +42,16 @@ export const deleteChannelRequest = createAction('CHANNEL_DELETE_REQUEST');
 export const deleteChannelSuccess = createAction('CHANNEL_DELETE_SUCCESS');
 export const deleteChannelFailure = createAction('CHANNEL_DELETE_FAILURE');
 
-
 export const requestAddChannel = (name, socketId) => async (dispatch) => {
   try {
     const url = routes.channelsUrl();
+    log(`request: add channel: ${name}`);
     const response = await axios.post(url, { data: { attributes: { name }, socketId } });
     dispatch(addChannel({ channel: response.data.data }));
+    log(`add channel response satus: ${response.status}`);
   } catch (e) {
     showAlert('error', 'Network error');
-    throw e;
+    errLog(`add channel error: ${e.message}`);
   }
 };
 
@@ -50,11 +59,13 @@ export const requestDeleteChannel = (channelId, socketId) => async (dispatch) =>
   dispatch(deleteChannelRequest());
   const url = routes.channelUrl(channelId);
   try {
-    await axios.delete(url, { data: { socketId } });
+    log(`request: delete channel by id: ${channelId}`);
+    const response = await axios.delete(url, { data: { socketId } });
     dispatch(deleteChannelSuccess({ channelId }));
+    log(`delete channel response satus: ${response.status}`);
   } catch (e) {
     dispatch(deleteChannelFailure());
-    throw e;
+    errLog(`delete channel error: ${e.message}`);
   }
 };
 
@@ -64,6 +75,13 @@ export const updateChannel = createAction('CHANNEL_UPDATE');
 
 export const requestUpdateChannel = (id, attributes, socketId) => async (dispatch) => {
   const url = routes.channelUrl(id);
-  await axios.patch(url, { data: { attributes }, socketId });
-  dispatch(updateChannel({ channel: { id, attributes } }));
+  try {
+    log(`request: update channel by id: ${id}, new values: ${JSON.stringify(attributes)}`);
+    const response = await axios.patch(url, { data: { attributes }, socketId });
+    dispatch(updateChannel({ channel: { id, attributes } }));
+    log(`update channel response satus: ${response.status}`);
+  } catch (e) {
+    errLog(`update channel error: ${e.message}`);
+    throw new SubmissionError({ _error: e.message });
+  }
 };
