@@ -75,7 +75,7 @@ class ChannelUpdatingModal extends React.Component {
 
   renderForm() {
     const {
-      handleSubmit, submitting, submitSucceeded,
+      handleSubmit, submitting, submitSucceeded, submitFailed, error,
     } = this.props;
 
     if (submitSucceeded) {
@@ -94,6 +94,7 @@ class ChannelUpdatingModal extends React.Component {
             disabled={submitting}
           />
         </Form.Group>
+        {(submitFailed && error) ? <span className="px-2 text-danger">{error}</span> : null}
       </Form>
     );
   }
@@ -108,7 +109,7 @@ class ChannelUpdatingModal extends React.Component {
 
   renderApplyButton() {
     const {
-      handleSubmit, submitting, valid, submitSucceeded, pristine,
+      handleSubmit, submitting, valid, submitSucceeded, pristine, submitFailed,
     } = this.props;
     if (submitSucceeded) {
       return null;
@@ -118,7 +119,7 @@ class ChannelUpdatingModal extends React.Component {
         onClick={handleSubmit(this.handleConfirmChannelUpdating)}
         variant="warning"
         type="submit"
-        disabled={!valid || submitting || pristine}
+        disabled={(!valid && !submitFailed) || submitting || pristine}
       >
         {!submitting ? 'Apply' : (
           <React.Fragment>
