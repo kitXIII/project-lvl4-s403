@@ -1,4 +1,0 @@
-[ignore]
-.*/__tests__/.*
-.*/node_modules/.*
-.*/dist/.*

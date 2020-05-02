@@ -52,6 +52,7 @@ export default () => {
   const router = new Router();
 
   app.use(koaLogger());
+
   const pug = new Pug({
     viewPath: path.join(__dirname, '..', 'views'),
     debug: true,

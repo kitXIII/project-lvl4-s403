@@ -132,8 +132,8 @@ export default (router, io, container) => {
     });
 
   return router
-    .get('root', '/', (ctx) => {
-      ctx.render('index', { gon: state });
+    .get('root', '/', async (ctx) => {
+      await ctx.render('index', { gon: state });
     })
     .use('/api/v1', apiRouter.routes(), apiRouter.allowedMethods());
 };
