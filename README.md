@@ -2,9 +2,16 @@
 [![Issue Count](https://codeclimate.com/github/kitXIII/project-lvl4-s403/badges/issue_count.svg)](https://codeclimate.com/github/kitXIII/project-lvl4-s403)
 [![Build Status](https://travis-ci.org/kitXIII/project-lvl4-s403.svg?branch=master)](https://travis-ci.org/kitXIII/project-lvl4-s403)
 
-# Frontend chat project
+# ReactJS chat
 
+#### Local start
 
-## Example
+To install dependencies, run: 
+```shell
+make install
+```
 
-[Heroku live demo](https://chat-kit.herokuapp.com)
+To run locally, enter:
+```shell
+make start
+```
